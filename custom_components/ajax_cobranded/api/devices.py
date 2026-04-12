@@ -49,6 +49,8 @@ def _encode_varint_field(field_number: int, value: int) -> bytes:
     return bytes([tag, value])
 
 
+_GSM_TYPE_MAP: dict[int, str] = {0: "Unknown", 1: "2G", 2: "3G", 3: "4G"}
+
 _STATE_MAP: dict[int, DeviceState] = {
     0: DeviceState.ONLINE,
     1: DeviceState.LOCKED,
@@ -143,7 +145,8 @@ class DevicesApi:
                 result["signal_strength"] = int(status.signal_strength.device_signal_level)
             elif which == "gsm_status":
                 gsm = status.gsm_status
-                result["gsm_type"] = int(gsm.type) if hasattr(gsm, "type") else 0
+                gsm_int = int(gsm.type) if hasattr(gsm, "type") else 0
+                result["gsm_type"] = _GSM_TYPE_MAP.get(gsm_int, "Unknown")
                 result["gsm_connected"] = int(gsm.status) == 2 if hasattr(gsm, "status") else False
             elif which == "monitoring":
                 result["monitoring_active"] = (

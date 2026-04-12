@@ -226,7 +226,7 @@ class TestStatusParser:
         status.gsm_status.type = 3  # 4G
         status.gsm_status.status = 2  # connected
         result = DevicesApi._parse_statuses([status])
-        assert result.get("gsm_type") == 3
+        assert result.get("gsm_type") == "4G"
         assert result.get("gsm_connected") is True
 
     def test_gsm_status_not_connected(self) -> None:

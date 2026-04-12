@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Ajax Security Girişi",
+                "description": "Ajax Security hesabınızın kimlik bilgilerini girin.",
+                "data": {
+                    "email": "E-posta",
+                    "password": "Parola",
+                    "app_label": "Uygulama etiketi (co-branded uygulama adı)"
+                }
+            },
+            "2fa": {
+                "title": "İki Faktörlü Doğrulama",
+                "description": "Doğrulama uygulamanızdaki 6 haneli kodu girin.",
+                "data": { "totp_code": "TOTP Kodu" }
+            },
+            "select_spaces": {
+                "title": "Alan Seçimi",
+                "description": "Eklemek istediğiniz alanları (hub'ları) seçin.",
+                "data": { "spaces": "Alanlar" }
+            }
+        },
+        "error": {
+            "invalid_auth": "Geçersiz e-posta veya parola.",
+            "invalid_totp": "Geçersiz TOTP kodu. Lütfen tekrar deneyin.",
+            "cannot_connect": "Ajax sunucularına bağlanılamıyor.",
+            "unknown": "Beklenmeyen bir hata oluştu."
+        },
+        "abort": {
+            "already_configured": "Bu hesap zaten yapılandırılmış.",
+            "account_locked": "Hesap kilitlendi. Lütfen daha sonra tekrar deneyin.",
+            "reauth_successful": "Yeniden doğrulama başarılı."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Ajax Security Seçenekleri",
+                "data": {
+                    "poll_interval": "Yedek yoklama aralığı (saniye)",
+                    "use_pin_code": "Kurma/devre dışı bırakma için PIN kodu gerektir",
+                    "fcm_project_id": "FCM Proje Kimliği (anlık bildirimler için)",
+                    "fcm_app_id": "FCM Uygulama Kimliği",
+                    "fcm_api_key": "FCM API Anahtarı",
+                    "fcm_sender_id": "FCM Gönderici Kimliği"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "capture_photo": { "name": "Fotoğraf çek" }
+        },
+        "binary_sensor": {
+            "monitoring": { "name": "Güvenlik merkezi bağlantısı" },
+            "gsm": { "name": "Hücresel ağ bağlı" },
+            "lid": { "name": "Kapak açık" },
+            "ext_contact": { "name": "Harici kontak açık" },
+            "ext_alert": { "name": "Harici kontak alarmı" },
+            "drilling": { "name": "Gövde delme algılandı" },
+            "anti_mask": { "name": "Örtme koruması" },
+            "malfunction": { "name": "Arıza" },
+            "interference": { "name": "Parazit" },
+            "relay_stuck": { "name": "Röle takılı" },
+            "always_active": { "name": "Her zaman aktif" },
+            "connectivity": { "name": "Bağlantı" },
+            "problem": { "name": "Sorun" }
+        },
+        "sensor": {
+            "signal_level": { "name": "Sinyal seviyesi" },
+            "gsm_type": { "name": "GSM türü" },
+            "wifi_signal_level": { "name": "Wi-Fi sinyal seviyesi" },
+            "sim_status": { "name": "SIM durumu" },
+            "sim_imei": { "name": "IMEI" }
+        },
+        "switch": {
+            "channel_1": { "name": "Kanal 1" },
+            "channel_2": { "name": "Kanal 2" }
+        }
+    }
+}

@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Вхід до Ajax Security",
+                "description": "Введіть облікові дані вашого акаунту Ajax Security.",
+                "data": {
+                    "email": "Електронна пошта",
+                    "password": "Пароль",
+                    "app_label": "Назва додатку (co-branded назва)"
+                }
+            },
+            "2fa": {
+                "title": "Двофакторна автентифікація",
+                "description": "Введіть 6-значний код з вашого додатку автентифікації.",
+                "data": { "totp_code": "Код TOTP" }
+            },
+            "select_spaces": {
+                "title": "Вибір просторів",
+                "description": "Виберіть простори (хаби) для додавання.",
+                "data": { "spaces": "Простори" }
+            }
+        },
+        "error": {
+            "invalid_auth": "Невірна електронна пошта або пароль.",
+            "invalid_totp": "Невірний код TOTP. Спробуйте ще раз.",
+            "cannot_connect": "Не вдається підключитися до серверів Ajax.",
+            "unknown": "Виникла непередбачена помилка."
+        },
+        "abort": {
+            "already_configured": "Цей акаунт вже налаштовано.",
+            "account_locked": "Акаунт заблоковано. Спробуйте пізніше.",
+            "reauth_successful": "Повторна автентифікація успішна."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Налаштування Ajax Security",
+                "data": {
+                    "poll_interval": "Резервний інтервал опитування (секунди)",
+                    "use_pin_code": "Вимагати PIN-код для постановки/зняття з охорони",
+                    "fcm_project_id": "ID проекту FCM (для push-сповіщень)",
+                    "fcm_app_id": "ID додатку FCM",
+                    "fcm_api_key": "Ключ API FCM",
+                    "fcm_sender_id": "ID відправника FCM"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "capture_photo": { "name": "Зробити фото" }
+        },
+        "binary_sensor": {
+            "monitoring": { "name": "Підключення до ЦМО" },
+            "gsm": { "name": "Стільниковий зв'язок" },
+            "lid": { "name": "Кришка відкрита" },
+            "ext_contact": { "name": "Зовнішній контакт розімкнений" },
+            "ext_alert": { "name": "Тривога зовнішнього контакту" },
+            "drilling": { "name": "Свердління корпусу" },
+            "anti_mask": { "name": "Антизамаскування" },
+            "malfunction": { "name": "Несправність" },
+            "interference": { "name": "Перешкоди" },
+            "relay_stuck": { "name": "Реле застрягло" },
+            "always_active": { "name": "Завжди активний" },
+            "connectivity": { "name": "Підключення" },
+            "problem": { "name": "Проблема" }
+        },
+        "sensor": {
+            "signal_level": { "name": "Рівень сигналу" },
+            "gsm_type": { "name": "Тип GSM" },
+            "wifi_signal_level": { "name": "Рівень сигналу Wi-Fi" },
+            "sim_status": { "name": "Стан SIM-карти" },
+            "sim_imei": { "name": "IMEI" }
+        },
+        "switch": {
+            "channel_1": { "name": "Канал 1" },
+            "channel_2": { "name": "Канал 2" }
+        }
+    }
+}

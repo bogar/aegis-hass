@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Ajax Security Anmeldung",
+                "description": "Geben Sie die Anmeldedaten Ihres Ajax Security-Kontos ein.",
+                "data": {
+                    "email": "E-Mail",
+                    "password": "Passwort",
+                    "app_label": "App-Bezeichnung (Co-Branded App-Name)"
+                }
+            },
+            "2fa": {
+                "title": "Zwei-Faktor-Authentifizierung",
+                "description": "Geben Sie den 6-stelligen Code aus Ihrer Authentifizierungs-App ein.",
+                "data": { "totp_code": "TOTP-Code" }
+            },
+            "select_spaces": {
+                "title": "Bereiche auswählen",
+                "description": "Wählen Sie aus, welche Bereiche (Hubs) hinzugefügt werden sollen.",
+                "data": { "spaces": "Bereiche" }
+            }
+        },
+        "error": {
+            "invalid_auth": "Ungültige E-Mail-Adresse oder falsches Passwort.",
+            "invalid_totp": "Ungültiger TOTP-Code. Bitte versuchen Sie es erneut.",
+            "cannot_connect": "Verbindung zu Ajax-Servern nicht möglich.",
+            "unknown": "Ein unerwarteter Fehler ist aufgetreten."
+        },
+        "abort": {
+            "already_configured": "Dieses Konto ist bereits konfiguriert.",
+            "account_locked": "Konto ist gesperrt. Bitte versuchen Sie es später erneut.",
+            "reauth_successful": "Erneute Authentifizierung erfolgreich."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Ajax Security Einstellungen",
+                "data": {
+                    "poll_interval": "Ersatz-Abfrageintervall (Sekunden)",
+                    "use_pin_code": "PIN-Code für Scharf-/Unscharfschalten erforderlich",
+                    "fcm_project_id": "FCM-Projekt-ID (für Push-Benachrichtigungen)",
+                    "fcm_app_id": "FCM-App-ID",
+                    "fcm_api_key": "FCM-API-Schlüssel",
+                    "fcm_sender_id": "FCM-Absender-ID"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "capture_photo": { "name": "Foto aufnehmen" }
+        },
+        "binary_sensor": {
+            "monitoring": { "name": "Notruf-Leitstelle verbunden" },
+            "gsm": { "name": "Mobilfunk verbunden" },
+            "lid": { "name": "Gehäusedeckel geöffnet" },
+            "ext_contact": { "name": "Externer Kontakt unterbrochen" },
+            "ext_alert": { "name": "Externer Kontaktalarm" },
+            "drilling": { "name": "Gehäusebohrung erkannt" },
+            "anti_mask": { "name": "Abdeckungsschutz" },
+            "malfunction": { "name": "Fehlfunktion" },
+            "interference": { "name": "Störung" },
+            "relay_stuck": { "name": "Relais blockiert" },
+            "always_active": { "name": "Immer aktiv" },
+            "connectivity": { "name": "Konnektivität" },
+            "problem": { "name": "Problem" }
+        },
+        "sensor": {
+            "signal_level": { "name": "Signalstärke" },
+            "gsm_type": { "name": "GSM-Typ" },
+            "wifi_signal_level": { "name": "WLAN-Signalstärke" },
+            "sim_status": { "name": "SIM-Status" },
+            "sim_imei": { "name": "IMEI" }
+        },
+        "switch": {
+            "channel_1": { "name": "Kanal 1" },
+            "channel_2": { "name": "Kanal 2" }
+        }
+    }
+}
