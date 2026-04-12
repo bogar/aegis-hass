@@ -77,6 +77,13 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             all_spaces = await self._spaces_api.list_spaces()
             self.spaces = {s.id: s for s in all_spaces if s.id in self._space_ids}
 
+            # Fetch SIM info for each hub
+            for space in self.spaces.values():
+                if space.hub_id:
+                    sim = await self._hub_object_api.get_sim_info(space.hub_id)
+                    if sim:
+                        self.sim_info[space.hub_id] = sim
+
             # Start persistent device streams on first update (once only)
             if not self._streams_started:
                 self._streams_started = True
@@ -92,13 +99,6 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 for device in space_devices:
                     all_devices[device.id] = device
             self.devices = all_devices
-
-            # Fetch SIM info for each hub
-            for space in self.spaces.values():
-                if space.hub_id:
-                    sim = await self._hub_object_api.get_sim_info(space.hub_id)
-                    if sim:
-                        self.sim_info[space.hub_id] = sim
 
             return {"spaces": self.spaces, "devices": self.devices}
         except Exception as err:
