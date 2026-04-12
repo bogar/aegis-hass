@@ -29,6 +29,21 @@
             "reauth_successful": "Reautenticacio correcta."
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Opcions d'Ajax Security",
+                "data": {
+                    "poll_interval": "Interval de sondeig de reserva (segons)",
+                    "use_pin_code": "Requerir codi PIN per armar/desarmar",
+                    "fcm_project_id": "ID de projecte FCM (per a notificacions push)",
+                    "fcm_app_id": "ID d'app FCM",
+                    "fcm_api_key": "Clau d'API FCM",
+                    "fcm_sender_id": "ID de remitent FCM"
+                }
+            }
+        }
+    },
     "entity": {
         "button": {
             "capture_photo": {

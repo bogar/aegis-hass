@@ -28,7 +28,7 @@ _LOGGER = logging.getLogger(__name__)
 @dataclass(frozen=True)
 class SensorTypeInfo:
     device_class: SensorDeviceClass | None
-    state_class: SensorStateClass
+    state_class: SensorStateClass | None
     unit: str | None
     value_source: str
     entity_category: EntityCategory | None
@@ -76,7 +76,7 @@ SENSOR_TYPES: dict[str, SensorTypeInfo] = {
     ),
     "gsm_type": SensorTypeInfo(
         None,
-        SensorStateClass.MEASUREMENT,
+        None,
         None,
         "status",
         EntityCategory.DIAGNOSTIC,
@@ -166,7 +166,7 @@ class AjaxSensor(CoordinatorEntity[AjaxCobrandedCoordinator], SensorEntity):
         return device is not None and device.is_online
 
     @property
-    def native_value(self) -> float | int | None:
+    def native_value(self) -> float | int | str | None:
         device = self._device
         if device is None:
             return None
@@ -175,6 +175,8 @@ class AjaxSensor(CoordinatorEntity[AjaxCobrandedCoordinator], SensorEntity):
         raw = device.statuses.get(self._sensor_key)
         if raw is None:
             return None
+        if isinstance(raw, str):
+            return raw
         return float(raw) if isinstance(raw, float) else int(raw)
 
 

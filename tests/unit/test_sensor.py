@@ -184,11 +184,11 @@ class TestAjaxSensor:
         assert sensor.available is False
 
     def test_gsm_type_sensor(self) -> None:
-        device = self._make_device({"gsm_type": 3})
+        device = self._make_device({"gsm_type": "4G"})
         coordinator = MagicMock()
         coordinator.devices = {"dev-1": device}
         sensor = AjaxSensor(coordinator=coordinator, device_id="dev-1", sensor_key="gsm_type")
-        assert sensor.native_value == 3
+        assert sensor.native_value == "4G"
         assert sensor._attr_translation_key == "gsm_type"
 
     def test_gsm_type_sensor_is_diagnostic(self) -> None:
@@ -213,7 +213,7 @@ class TestAjaxSensor:
             state=DeviceState.ONLINE,
             malfunctions=0,
             bypassed=False,
-            statuses={"gsm_type": 3},
+            statuses={"gsm_type": "4G"},
             battery=None,
         )
         coordinator = MagicMock()

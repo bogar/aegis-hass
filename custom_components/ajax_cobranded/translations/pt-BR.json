@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Login Ajax Security",
+                "description": "Insira as credenciais da sua conta Ajax Security.",
+                "data": {
+                    "email": "E-mail",
+                    "password": "Senha",
+                    "app_label": "Rótulo do aplicativo (nome do app co-branded)"
+                }
+            },
+            "2fa": {
+                "title": "Autenticação de dois fatores",
+                "description": "Insira o código de 6 dígitos do seu aplicativo autenticador.",
+                "data": { "totp_code": "Código TOTP" }
+            },
+            "select_spaces": {
+                "title": "Selecionar espaços",
+                "description": "Escolha quais espaços (hubs) adicionar.",
+                "data": { "spaces": "Espaços" }
+            }
+        },
+        "error": {
+            "invalid_auth": "E-mail ou senha inválidos.",
+            "invalid_totp": "Código TOTP inválido. Por favor, tente novamente.",
+            "cannot_connect": "Não foi possível conectar aos servidores Ajax.",
+            "unknown": "Ocorreu um erro inesperado."
+        },
+        "abort": {
+            "already_configured": "Esta conta já está configurada.",
+            "account_locked": "Conta bloqueada. Por favor, tente novamente mais tarde.",
+            "reauth_successful": "Reautenticação realizada com sucesso."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Opções Ajax Security",
+                "data": {
+                    "poll_interval": "Intervalo de sondagem reserva (segundos)",
+                    "use_pin_code": "Exigir código PIN para armar/desarmar",
+                    "fcm_project_id": "ID do projeto FCM (para notificações push)",
+                    "fcm_app_id": "ID do aplicativo FCM",
+                    "fcm_api_key": "Chave de API FCM",
+                    "fcm_sender_id": "ID do remetente FCM"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "capture_photo": { "name": "Tirar foto" }
+        },
+        "binary_sensor": {
+            "monitoring": { "name": "Conexão com central de monitoramento" },
+            "gsm": { "name": "Rede celular conectada" },
+            "lid": { "name": "Tampa aberta" },
+            "ext_contact": { "name": "Contato externo aberto" },
+            "ext_alert": { "name": "Alerta de contato externo" },
+            "drilling": { "name": "Perfuração da caixa detectada" },
+            "anti_mask": { "name": "Anti-mascaramento" },
+            "malfunction": { "name": "Falha" },
+            "interference": { "name": "Interferência" },
+            "relay_stuck": { "name": "Relé preso" },
+            "always_active": { "name": "Sempre ativo" },
+            "connectivity": { "name": "Conectividade" },
+            "problem": { "name": "Problema" }
+        },
+        "sensor": {
+            "signal_level": { "name": "Nível de sinal" },
+            "gsm_type": { "name": "Tipo GSM" },
+            "wifi_signal_level": { "name": "Nível de sinal Wi-Fi" },
+            "sim_status": { "name": "Status do SIM" },
+            "sim_imei": { "name": "IMEI" }
+        },
+        "switch": {
+            "channel_1": { "name": "Canal 1" },
+            "channel_2": { "name": "Canal 2" }
+        }
+    }
+}

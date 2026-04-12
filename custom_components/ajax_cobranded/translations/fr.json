@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Connexion Ajax Security",
+                "description": "Entrez les identifiants de votre compte Ajax Security.",
+                "data": {
+                    "email": "Adresse e-mail",
+                    "password": "Mot de passe",
+                    "app_label": "Libellé de l'application (nom de l'app co-branded)"
+                }
+            },
+            "2fa": {
+                "title": "Authentification à deux facteurs",
+                "description": "Entrez le code à 6 chiffres de votre application d'authentification.",
+                "data": { "totp_code": "Code TOTP" }
+            },
+            "select_spaces": {
+                "title": "Sélectionner les espaces",
+                "description": "Choisissez les espaces (hubs) à ajouter.",
+                "data": { "spaces": "Espaces" }
+            }
+        },
+        "error": {
+            "invalid_auth": "Adresse e-mail ou mot de passe incorrect.",
+            "invalid_totp": "Code TOTP invalide. Veuillez réessayer.",
+            "cannot_connect": "Impossible de se connecter aux serveurs Ajax.",
+            "unknown": "Une erreur inattendue s'est produite."
+        },
+        "abort": {
+            "already_configured": "Ce compte est déjà configuré.",
+            "account_locked": "Compte verrouillé. Veuillez réessayer plus tard.",
+            "reauth_successful": "Ré-authentification réussie."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Options Ajax Security",
+                "data": {
+                    "poll_interval": "Intervalle d'interrogation de secours (secondes)",
+                    "use_pin_code": "Exiger un code PIN pour armer/désarmer",
+                    "fcm_project_id": "ID de projet FCM (pour les notifications push)",
+                    "fcm_app_id": "ID d'application FCM",
+                    "fcm_api_key": "Clé API FCM",
+                    "fcm_sender_id": "ID d'expéditeur FCM"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "capture_photo": { "name": "Prendre une photo" }
+        },
+        "binary_sensor": {
+            "monitoring": { "name": "Connexion télésurveillance" },
+            "gsm": { "name": "Réseau cellulaire connecté" },
+            "lid": { "name": "Couvercle ouvert" },
+            "ext_contact": { "name": "Contact externe ouvert" },
+            "ext_alert": { "name": "Alerte contact externe" },
+            "drilling": { "name": "Perçage du boîtier détecté" },
+            "anti_mask": { "name": "Anti-masquage" },
+            "malfunction": { "name": "Dysfonctionnement" },
+            "interference": { "name": "Interférence" },
+            "relay_stuck": { "name": "Relais bloqué" },
+            "always_active": { "name": "Toujours actif" },
+            "connectivity": { "name": "Connectivité" },
+            "problem": { "name": "Problème" }
+        },
+        "sensor": {
+            "signal_level": { "name": "Niveau de signal" },
+            "gsm_type": { "name": "Type GSM" },
+            "wifi_signal_level": { "name": "Niveau de signal Wi-Fi" },
+            "sim_status": { "name": "État de la carte SIM" },
+            "sim_imei": { "name": "IMEI" }
+        },
+        "switch": {
+            "channel_1": { "name": "Canal 1" },
+            "channel_2": { "name": "Canal 2" }
+        }
+    }
+}

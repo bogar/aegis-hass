@@ -29,6 +29,21 @@
             "reauth_successful": "Reautenticacion exitosa."
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Opciones de Ajax Security",
+                "data": {
+                    "poll_interval": "Intervalo de sondeo de reserva (segundos)",
+                    "use_pin_code": "Requerir codigo PIN para armar/desarmar",
+                    "fcm_project_id": "ID de proyecto FCM (para notificaciones push)",
+                    "fcm_app_id": "ID de app FCM",
+                    "fcm_api_key": "Clave de API FCM",
+                    "fcm_sender_id": "ID de remitente FCM"
+                }
+            }
+        }
+    },
     "entity": {
         "button": {
             "capture_photo": {

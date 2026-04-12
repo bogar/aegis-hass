@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Ajax Security Aanmelden",
+                "description": "Voer de inloggegevens van uw Ajax Security-account in.",
+                "data": {
+                    "email": "E-mailadres",
+                    "password": "Wachtwoord",
+                    "app_label": "App-label (naam co-branded app)"
+                }
+            },
+            "2fa": {
+                "title": "Twee-factor-authenticatie",
+                "description": "Voer de 6-cijferige code in van uw authenticator-app.",
+                "data": { "totp_code": "TOTP-code" }
+            },
+            "select_spaces": {
+                "title": "Selecteer ruimtes",
+                "description": "Kies welke ruimtes (hubs) u wilt toevoegen.",
+                "data": { "spaces": "Ruimtes" }
+            }
+        },
+        "error": {
+            "invalid_auth": "Ongeldig e-mailadres of wachtwoord.",
+            "invalid_totp": "Ongeldige TOTP-code. Probeer het opnieuw.",
+            "cannot_connect": "Kan geen verbinding maken met de Ajax-servers.",
+            "unknown": "Er is een onverwachte fout opgetreden."
+        },
+        "abort": {
+            "already_configured": "Dit account is al geconfigureerd.",
+            "account_locked": "Account is vergrendeld. Probeer het later opnieuw.",
+            "reauth_successful": "Herverificatie geslaagd."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Ajax Security Instellingen",
+                "data": {
+                    "poll_interval": "Reserve-pollinginterval (seconden)",
+                    "use_pin_code": "PIN-code vereisen voor in-/uitschakelen",
+                    "fcm_project_id": "FCM-project-ID (voor pushmeldingen)",
+                    "fcm_app_id": "FCM-app-ID",
+                    "fcm_api_key": "FCM-API-sleutel",
+                    "fcm_sender_id": "FCM-afzender-ID"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "capture_photo": { "name": "Foto maken" }
+        },
+        "binary_sensor": {
+            "monitoring": { "name": "Verbinding meldkamer" },
+            "gsm": { "name": "Mobiel netwerk verbonden" },
+            "lid": { "name": "Deksel geopend" },
+            "ext_contact": { "name": "Extern contact verbroken" },
+            "ext_alert": { "name": "Alarm extern contact" },
+            "drilling": { "name": "Boren in behuizing" },
+            "anti_mask": { "name": "Anti-masking" },
+            "malfunction": { "name": "Storing" },
+            "interference": { "name": "Interferentie" },
+            "relay_stuck": { "name": "Relais geblokkeerd" },
+            "always_active": { "name": "Altijd actief" },
+            "connectivity": { "name": "Verbinding" },
+            "problem": { "name": "Probleem" }
+        },
+        "sensor": {
+            "signal_level": { "name": "Signaalsterkte" },
+            "gsm_type": { "name": "GSM-type" },
+            "wifi_signal_level": { "name": "Wi-Fi-signaalsterkte" },
+            "sim_status": { "name": "SIM-status" },
+            "sim_imei": { "name": "IMEI" }
+        },
+        "switch": {
+            "channel_1": { "name": "Kanaal 1" },
+            "channel_2": { "name": "Kanaal 2" }
+        }
+    }
+}

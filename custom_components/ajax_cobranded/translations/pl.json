@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Logowanie Ajax Security",
+                "description": "Wprowadź dane logowania do konta Ajax Security.",
+                "data": {
+                    "email": "Adres e-mail",
+                    "password": "Hasło",
+                    "app_label": "Etykieta aplikacji (nazwa aplikacji co-branded)"
+                }
+            },
+            "2fa": {
+                "title": "Uwierzytelnianie dwuskładnikowe",
+                "description": "Wprowadź 6-cyfrowy kod z aplikacji uwierzytelniającej.",
+                "data": { "totp_code": "Kod TOTP" }
+            },
+            "select_spaces": {
+                "title": "Wybierz przestrzenie",
+                "description": "Wybierz przestrzenie (huby) do dodania.",
+                "data": { "spaces": "Przestrzenie" }
+            }
+        },
+        "error": {
+            "invalid_auth": "Nieprawidłowy adres e-mail lub hasło.",
+            "invalid_totp": "Nieprawidłowy kod TOTP. Spróbuj ponownie.",
+            "cannot_connect": "Nie można połączyć się z serwerami Ajax.",
+            "unknown": "Wystąpił nieoczekiwany błąd."
+        },
+        "abort": {
+            "already_configured": "To konto jest już skonfigurowane.",
+            "account_locked": "Konto jest zablokowane. Spróbuj ponownie później.",
+            "reauth_successful": "Ponowne uwierzytelnienie zakończone sukcesem."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Opcje Ajax Security",
+                "data": {
+                    "poll_interval": "Zapasowy interwał odpytywania (sekundy)",
+                    "use_pin_code": "Wymagaj kodu PIN do uzbrojenia/rozbrojenia",
+                    "fcm_project_id": "ID projektu FCM (dla powiadomień push)",
+                    "fcm_app_id": "ID aplikacji FCM",
+                    "fcm_api_key": "Klucz API FCM",
+                    "fcm_sender_id": "ID nadawcy FCM"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "capture_photo": { "name": "Zrób zdjęcie" }
+        },
+        "binary_sensor": {
+            "monitoring": { "name": "Połączenie z centrum monitoringu" },
+            "gsm": { "name": "Sieć komórkowa" },
+            "lid": { "name": "Pokrywa otwarta" },
+            "ext_contact": { "name": "Zewnętrzny styk przerwany" },
+            "ext_alert": { "name": "Alarm zewnętrznego styku" },
+            "drilling": { "name": "Wiercenie obudowy" },
+            "anti_mask": { "name": "Antymaskowanie" },
+            "malfunction": { "name": "Usterka" },
+            "interference": { "name": "Zakłócenia" },
+            "relay_stuck": { "name": "Przekaźnik zablokowany" },
+            "always_active": { "name": "Zawsze aktywny" },
+            "connectivity": { "name": "Łączność" },
+            "problem": { "name": "Problem" }
+        },
+        "sensor": {
+            "signal_level": { "name": "Poziom sygnału" },
+            "gsm_type": { "name": "Typ GSM" },
+            "wifi_signal_level": { "name": "Poziom sygnału Wi-Fi" },
+            "sim_status": { "name": "Status karty SIM" },
+            "sim_imei": { "name": "IMEI" }
+        },
+        "switch": {
+            "channel_1": { "name": "Kanał 1" },
+            "channel_2": { "name": "Kanał 2" }
+        }
+    }
+}

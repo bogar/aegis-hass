@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Accesso Ajax Security",
+                "description": "Inserisci le credenziali del tuo account Ajax Security.",
+                "data": {
+                    "email": "E-mail",
+                    "password": "Password",
+                    "app_label": "Etichetta app (nome app co-branded)"
+                }
+            },
+            "2fa": {
+                "title": "Autenticazione a due fattori",
+                "description": "Inserisci il codice a 6 cifre dalla tua app di autenticazione.",
+                "data": { "totp_code": "Codice TOTP" }
+            },
+            "select_spaces": {
+                "title": "Seleziona spazi",
+                "description": "Scegli quali spazi (hub) aggiungere.",
+                "data": { "spaces": "Spazi" }
+            }
+        },
+        "error": {
+            "invalid_auth": "E-mail o password non validi.",
+            "invalid_totp": "Codice TOTP non valido. Riprova.",
+            "cannot_connect": "Impossibile connettersi ai server Ajax.",
+            "unknown": "Si è verificato un errore imprevisto."
+        },
+        "abort": {
+            "already_configured": "Questo account è già configurato.",
+            "account_locked": "Account bloccato. Riprova più tardi.",
+            "reauth_successful": "Riautenticazione completata con successo."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Opzioni Ajax Security",
+                "data": {
+                    "poll_interval": "Intervallo di polling di riserva (secondi)",
+                    "use_pin_code": "Richiedi codice PIN per inserire/disinserire",
+                    "fcm_project_id": "ID progetto FCM (per notifiche push)",
+                    "fcm_app_id": "ID app FCM",
+                    "fcm_api_key": "Chiave API FCM",
+                    "fcm_sender_id": "ID mittente FCM"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "capture_photo": { "name": "Scatta foto" }
+        },
+        "binary_sensor": {
+            "monitoring": { "name": "Connessione istituto di vigilanza" },
+            "gsm": { "name": "Rete cellulare connessa" },
+            "lid": { "name": "Coperchio aperto" },
+            "ext_contact": { "name": "Contatto esterno aperto" },
+            "ext_alert": { "name": "Allarme contatto esterno" },
+            "drilling": { "name": "Perforazione del contenitore" },
+            "anti_mask": { "name": "Anti-mascheramento" },
+            "malfunction": { "name": "Malfunzionamento" },
+            "interference": { "name": "Interferenza" },
+            "relay_stuck": { "name": "Relè bloccato" },
+            "always_active": { "name": "Sempre attivo" },
+            "connectivity": { "name": "Connettività" },
+            "problem": { "name": "Problema" }
+        },
+        "sensor": {
+            "signal_level": { "name": "Livello del segnale" },
+            "gsm_type": { "name": "Tipo GSM" },
+            "wifi_signal_level": { "name": "Livello segnale Wi-Fi" },
+            "sim_status": { "name": "Stato SIM" },
+            "sim_imei": { "name": "IMEI" }
+        },
+        "switch": {
+            "channel_1": { "name": "Canale 1" },
+            "channel_2": { "name": "Canale 2" }
+        }
+    }
+}

@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Autentificare Ajax Security",
+                "description": "Introduceți datele de autentificare ale contului Ajax Security.",
+                "data": {
+                    "email": "E-mail",
+                    "password": "Parolă",
+                    "app_label": "Etichetă aplicație (numele aplicației co-branded)"
+                }
+            },
+            "2fa": {
+                "title": "Autentificare în doi pași",
+                "description": "Introduceți codul de 6 cifre din aplicația de autentificare.",
+                "data": { "totp_code": "Cod TOTP" }
+            },
+            "select_spaces": {
+                "title": "Selectați spațiile",
+                "description": "Alegeți ce spații (hub-uri) să adăugați.",
+                "data": { "spaces": "Spații" }
+            }
+        },
+        "error": {
+            "invalid_auth": "E-mail sau parolă invalide.",
+            "invalid_totp": "Cod TOTP invalid. Vă rugăm să încercați din nou.",
+            "cannot_connect": "Nu se poate conecta la serverele Ajax.",
+            "unknown": "A apărut o eroare neașteptată."
+        },
+        "abort": {
+            "already_configured": "Acest cont este deja configurat.",
+            "account_locked": "Contul este blocat. Vă rugăm să încercați mai târziu.",
+            "reauth_successful": "Reautentificare reușită."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Opțiuni Ajax Security",
+                "data": {
+                    "poll_interval": "Interval de interogare de rezervă (secunde)",
+                    "use_pin_code": "Necesită cod PIN pentru armare/dezarmare",
+                    "fcm_project_id": "ID proiect FCM (pentru notificări push)",
+                    "fcm_app_id": "ID aplicație FCM",
+                    "fcm_api_key": "Cheie API FCM",
+                    "fcm_sender_id": "ID expeditor FCM"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "capture_photo": { "name": "Capturați fotografie" }
+        },
+        "binary_sensor": {
+            "monitoring": { "name": "Conexiune dispecerat" },
+            "gsm": { "name": "Rețea celulară conectată" },
+            "lid": { "name": "Capac deschis" },
+            "ext_contact": { "name": "Contact extern deschis" },
+            "ext_alert": { "name": "Alertă contact extern" },
+            "drilling": { "name": "Găurire carcasă detectată" },
+            "anti_mask": { "name": "Anti-mascare" },
+            "malfunction": { "name": "Defecțiune" },
+            "interference": { "name": "Interferență" },
+            "relay_stuck": { "name": "Releu blocat" },
+            "always_active": { "name": "Întotdeauna activ" },
+            "connectivity": { "name": "Conectivitate" },
+            "problem": { "name": "Problemă" }
+        },
+        "sensor": {
+            "signal_level": { "name": "Nivel semnal" },
+            "gsm_type": { "name": "Tip GSM" },
+            "wifi_signal_level": { "name": "Nivel semnal Wi-Fi" },
+            "sim_status": { "name": "Status SIM" },
+            "sim_imei": { "name": "IMEI" }
+        },
+        "switch": {
+            "channel_1": { "name": "Canal 1" },
+            "channel_2": { "name": "Canal 2" }
+        }
+    }
+}
