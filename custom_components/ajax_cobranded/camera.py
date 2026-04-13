@@ -22,7 +22,17 @@ if TYPE_CHECKING:
 
 _LOGGER = logging.getLogger(__name__)
 
-CAMERA_DEVICE_TYPES = {"motion_cam_phod", "motion_cam", "motion_cam_outdoor"}
+CAMERA_DEVICE_TYPES = {
+    "motion_cam",
+    "motion_cam_outdoor",
+    "motion_cam_fibra",
+    "motion_cam_phod",
+    "motion_cam_outdoor_phod",
+    "motion_cam_fibra_base",
+}
+
+# Only PhOD (Photo on Demand) models support on-demand photo capture
+PHOD_DEVICE_TYPES = {"motion_cam_phod", "motion_cam_outdoor_phod", "motion_cam_fibra_base"}
 
 
 async def async_setup_entry(

@@ -135,11 +135,14 @@
             "vibration": {
                 "name": "Titreşim"
             },
+            "tamper": {
+                "name": "Kasa kurcalama"
+            },
             "connectivity": {
                 "name": "Bağlantı"
             },
             "problem": {
-                "name": "Sorun"
+                "name": "Cihaz sorunu"
             }
         },
         "sensor": {

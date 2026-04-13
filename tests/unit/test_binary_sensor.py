@@ -159,6 +159,13 @@ class TestAjaxBinarySensor:
         )
         assert sensor.available is False
 
+    def test_tamper_has_translation_key(self) -> None:
+        device = self._make_device({"tamper": True})
+        coordinator = MagicMock()
+        coordinator.devices = {"dev-1": device}
+        sensor = AjaxBinarySensor(coordinator=coordinator, device_id="dev-1", status_key="tamper")
+        assert sensor._attr_translation_key == "tamper"
+
     def test_motion_sensor(self) -> None:
         device = self._make_device({"motion_detected": True})
         coordinator = MagicMock()

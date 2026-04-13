@@ -135,11 +135,14 @@
             "vibration": {
                 "name": "Vibration"
             },
+            "tamper": {
+                "name": "Case tamper"
+            },
             "connectivity": {
                 "name": "Connectivity"
             },
             "problem": {
-                "name": "Problem"
+                "name": "Device problem"
             }
         },
         "sensor": {

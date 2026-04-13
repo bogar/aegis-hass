@@ -135,11 +135,14 @@
             "vibration": {
                 "name": "Vibració"
             },
+            "tamper": {
+                "name": "Manipulació de carcassa"
+            },
             "connectivity": {
                 "name": "Connectivitat"
             },
             "problem": {
-                "name": "Problema"
+                "name": "Problema del dispositiu"
             }
         },
         "sensor": {
