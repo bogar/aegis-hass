@@ -40,7 +40,7 @@ KNOWN_APP_LABELS = [
     "Protecta",
     "ajax_pro",
 ]
-CLIENT_DEVICE_MODEL = "Home Assistant"
+CLIENT_DEVICE_MODEL = "SM-A536B"  # Generic Android model (Samsung Galaxy A53)
 CLIENT_DEVICE_TYPE = "MOBILE"
 CLIENT_APP_TYPE = "USER"
 

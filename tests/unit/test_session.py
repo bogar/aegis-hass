@@ -73,7 +73,7 @@ class TestSessionMetadata:
         assert meta_dict["application-label"] == "Ajax Security System"
         assert meta_dict["client-device-type"] == "MOBILE"
         assert meta_dict["client-device-id"] == "device-uuid-1"
-        assert meta_dict["client-device-model"] == "Home Assistant"
+        assert meta_dict["client-device-model"] == "SM-A536B"
 
     def test_device_info_custom_app_label(self) -> None:
         session = AjaxSession(app_label="Protegim")
@@ -87,7 +87,7 @@ class TestSessionMetadata:
         session._app_label = "Ajax Security System"
         meta = dict(session.get_device_info_metadata())
         assert "client-device-model" in meta
-        assert meta["client-device-model"] == "Home Assistant"
+        assert meta["client-device-model"] == "SM-A536B"
 
     def test_session_metadata_has_user_login(self) -> None:
         session = AjaxSession.__new__(AjaxSession)

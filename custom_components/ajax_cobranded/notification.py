@@ -52,6 +52,8 @@ class AjaxNotificationListener:
         self._store: Store[dict[str, Any]] = Store(hass, STORAGE_VERSION, STORAGE_KEY)
         self._credentials: dict[str, Any] | None = None
         self._photo_callbacks: dict[str, asyncio.Future[str | None]] = {}
+        self._notification_id_callbacks: dict[str, asyncio.Future[str | None]] = {}
+        self._last_notification_id: str | None = None
 
     async def async_start(self) -> None:
         """Register with FCM and start listening for push notifications."""
@@ -161,7 +163,22 @@ class AjaxNotificationListener:
         obj: object = None,  # noqa: ARG002
     ) -> None:
         """Handle incoming FCM push notification."""
-        _LOGGER.debug("Push notification received: persistent_id=%s", persistent_id)
+        _LOGGER.debug(
+            "Push notification received: persistent_id=%s keys=%s",
+            persistent_id,
+            list(notification.keys()),
+        )
+        # Dump raw notification data for debugging photo on-demand
+        for key, value in notification.items():
+            if key == "ENCODED_DATA" or (isinstance(value, str) and len(value) > 50):
+                _LOGGER.debug(
+                    "Push field %s: [%d chars] %s...",
+                    key,
+                    len(str(value)),
+                    str(value)[:120],
+                )
+            else:
+                _LOGGER.debug("Push field %s: %s", key, value)
 
         # Try to extract photo URL from push data
         # The key might be "ENCODED_DATA" (top-level) or nested inside "data"
@@ -175,6 +192,11 @@ class AjaxNotificationListener:
         if encoded_data:
             try:
                 raw = base64.b64decode(encoded_data)
+                _LOGGER.debug(
+                    "ENCODED_DATA decoded: %d bytes, hex=%s",
+                    len(raw),
+                    raw[:200].hex(),
+                )
                 # Search for HTTPS URLs in the decoded protobuf
                 urls = re.findall(rb'https://[^\x00-\x1f\x7f-\x9f"\'\\]+', raw)
                 for raw_url in urls:
@@ -192,6 +214,18 @@ class AjaxNotificationListener:
                     break
             except Exception:
                 _LOGGER.debug("Failed to parse ENCODED_DATA from push")
+
+        # Extract notification_id for photo URL retrieval
+        if encoded_data:
+            notif_id = self.extract_notification_id(encoded_data)
+            if notif_id:
+                self._last_notification_id = notif_id
+                _LOGGER.debug("Extracted notification_id: %s", notif_id[:20])
+                # Resolve pending notification_id futures
+                for future in list(self._notification_id_callbacks.values()):
+                    if not future.done():
+                        future.set_result(notif_id)
+                self._notification_id_callbacks.clear()
 
         # Parse event from ENCODED_DATA using compiled protos
         if encoded_data:
@@ -216,6 +250,35 @@ class AjaxNotificationListener:
             return None
         finally:
             self._photo_callbacks.pop(device_id, None)
+
+    async def wait_for_notification_id(self, device_id: str, timeout: float = 15.0) -> str | None:
+        """Wait for a notification_id to arrive via push notification after photo capture."""
+        loop = asyncio.get_running_loop()
+        future: asyncio.Future[str | None] = loop.create_future()
+        self._notification_id_callbacks[device_id] = future
+        try:
+            return await asyncio.wait_for(future, timeout=timeout)
+        except TimeoutError:
+            _LOGGER.debug("Timeout waiting for notification_id from push")
+            return None
+        finally:
+            self._notification_id_callbacks.pop(device_id, None)
+
+    @staticmethod
+    def extract_notification_id(encoded_data: str) -> str | None:
+        """Extract notification_id from base64-encoded push notification data."""
+        try:
+            raw = base64.b64decode(encoded_data)
+            # PushNotificationDispatchEvent field 1 (Notification) is at tag 0x0a
+            # Inside Notification, field 1 (id) is also tag 0x0a
+            # We look for a 64-char hex string which is the notification ID format
+            matches = re.findall(rb"[0-9A-Fa-f]{64}", raw)
+            if matches:
+                result: str = matches[0].decode("ascii")
+                return result
+        except Exception:
+            _LOGGER.debug("Failed to extract notification_id from push")
+        return None
 
     def _parse_and_fire_event(self, encoded_data: str) -> None:
         """Parse event from base64-encoded push notification data."""
