@@ -234,32 +234,25 @@ class TestAlarmControlPanel:
         coordinator.security_api.arm_night_mode.assert_called_once_with("s1")
 
     @pytest.mark.asyncio
-    async def test_alarm_disarm_from_armed(self) -> None:
-        """Disarm refreshes state first, then calls disarm() for armed state."""
+    async def test_alarm_disarm(self) -> None:
         coordinator = MagicMock()
         coordinator.security_api.disarm = AsyncMock()
         coordinator.async_request_refresh = AsyncMock()
         coordinator.config_entry.options = {"use_pin_code": False}
-        coordinator.spaces = {"s1": self._make_space(SecurityState.ARMED)}
         panel = AjaxAlarmControlPanel(coordinator=coordinator, space_id="s1")
         await panel.async_alarm_disarm()
         coordinator.security_api.disarm.assert_called_once_with("s1")
-        # refresh called twice: once before disarm to get fresh state, once after
-        assert coordinator.async_request_refresh.call_count == 2
 
     @pytest.mark.asyncio
-    async def test_alarm_disarm_from_night_mode(self) -> None:
-        """Disarm refreshes state first, sees NIGHT_MODE, calls disarm_from_night_mode."""
+    async def test_alarm_disarm_from_night_mode_uses_regular_disarm(self) -> None:
+        """Regular disarm() works from night mode — server handles it correctly."""
         coordinator = MagicMock()
-        coordinator.security_api.disarm_from_night_mode = AsyncMock()
         coordinator.security_api.disarm = AsyncMock()
         coordinator.async_request_refresh = AsyncMock()
         coordinator.config_entry.options = {"use_pin_code": False}
-        coordinator.spaces = {"s1": self._make_space(SecurityState.NIGHT_MODE)}
         panel = AjaxAlarmControlPanel(coordinator=coordinator, space_id="s1")
         await panel.async_alarm_disarm()
-        coordinator.security_api.disarm_from_night_mode.assert_called_once_with("s1")
-        coordinator.security_api.disarm.assert_not_called()
+        coordinator.security_api.disarm.assert_called_once_with("s1")
 
     @pytest.mark.asyncio
     async def test_alarm_disarm_with_valid_pin(self) -> None:
