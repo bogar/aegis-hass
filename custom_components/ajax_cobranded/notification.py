@@ -223,11 +223,14 @@ class AjaxNotificationListener:
             if notif_id:
                 self._last_notification_id = notif_id
                 _LOGGER.debug("Extracted notification_id: %s", notif_id[:20])
-                # Resolve pending notification_id futures
-                for future in list(self._notification_id_callbacks.values()):
-                    if not future.done():
+                # Resolve the future for the matching device_id
+                # notification_id contains the device_id (e.g., ...309F61FA...)
+                for device_id, future in list(self._notification_id_callbacks.items()):
+                    if not future.done() and device_id.upper() in notif_id.upper():
                         future.set_result(notif_id)
-                self._notification_id_callbacks.clear()
+                        self._notification_id_callbacks.pop(device_id, None)
+                        _LOGGER.debug("Resolved notification_id for device %s", device_id)
+                        break
 
         # Parse event from ENCODED_DATA using compiled protos
         if encoded_data:

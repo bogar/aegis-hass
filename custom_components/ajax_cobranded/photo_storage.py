@@ -31,18 +31,18 @@ def _overlay_timestamp(image_bytes: bytes) -> bytes:
         img = Image.open(io.BytesIO(image_bytes))
         draw = ImageDraw.Draw(img)
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        font = ImageFont.load_default(size=18)
+        font = ImageFont.load_default(size=11)
 
-        # Semi-transparent black background for text
+        # Tight background behind text
         text_bbox = draw.textbbox((0, 0), now, font=font)
         text_w = text_bbox[2] - text_bbox[0]
         text_h = text_bbox[3] - text_bbox[1]
-        padding = 6
-        x = img.width - text_w - padding * 2 - 10
-        y = img.height - text_h - padding * 2 - 10
+        padding = 2
+        x = img.width - text_w - padding * 2 - 4
+        y = img.height - text_h - padding * 2 - 4
         draw.rectangle(
             [(x, y), (x + text_w + padding * 2, y + text_h + padding * 2)],
-            fill=(0, 0, 0, 180),
+            fill=(0, 0, 0, 160),
         )
         draw.text((x + padding, y + padding), now, fill=(255, 255, 255), font=font)
 

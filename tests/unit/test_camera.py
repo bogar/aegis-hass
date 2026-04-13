@@ -134,17 +134,12 @@ class TestAjaxCamera:
         assert cam.available is False
 
     @pytest.mark.asyncio
-    async def test_async_camera_image_returns_bytes_via_media_stream(self) -> None:
-        """Full success path: capture -> notification_id -> media stream -> download."""
+    async def test_async_camera_image_downloads_from_cached_url(self) -> None:
+        """When button stored a URL, camera downloads and returns the image."""
         coordinator = MagicMock()
-        coordinator.last_photo_urls = {}
-        coordinator.devices_api.capture_photo = AsyncMock(return_value="d1")
-        mock_listener = MagicMock()
-        mock_listener.wait_for_notification_id = AsyncMock(return_value="NOTIF123")
-        coordinator.notification_listener = mock_listener
-        coordinator.media_api.get_photo_url = AsyncMock(
-            return_value="https://app.prod.ajax.systems/photo.jpg"
-        )
+        coordinator.last_photo_urls = {
+            "d1": "https://hubs-uploaded-resources.s3.amazonaws.com/photo.jpg"
+        }
 
         cam = AjaxCamera(
             coordinator=coordinator, device_id="d1", hub_id="h1", device_type="motion_cam_phod"
@@ -166,8 +161,7 @@ class TestAjaxCamera:
             result = await cam.async_camera_image()
 
         assert result == b"fake_image_data"
-        mock_listener.wait_for_notification_id.assert_called_once_with("d1", timeout=15.0)
-        coordinator.media_api.get_photo_url.assert_called_once_with("NOTIF123", "h1", timeout=15.0)
+        assert "d1" not in coordinator.last_photo_urls
 
     @pytest.mark.asyncio
     async def test_async_camera_image_uses_cached_url_from_button(self) -> None:

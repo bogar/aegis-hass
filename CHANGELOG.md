@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-04-14
+
+### Added
+- **Photo on Demand**: working photo capture with URL retrieval via NotificationLogService media stream
+- Photo storage to `/media/ajax_photos/{device}/` with timestamp overlay (date/time burned into image)
+- Configurable photo retention: days (1-365, default 30) and max photos per device (0-10000, default 100)
+- Photo persistence across HA restarts (last photo saved to disk per device)
+- Automatic photo cleanup on startup and every 24 hours
+- Photos browsable via HA Media Browser (Local media → ajax_photos)
+
+### Changed
+- Device model identifier changed from "Home Assistant" to Android model for better server compatibility
+- Camera entity no longer auto-triggers captures — use the button entity for on-demand photos
+- Photo capture button only shown on MotionCam PhOD models (not regular MotionCam)
+- Notification ID filtering now matches by device ID for correct multi-camera support
+- `DELIVERED_WAS_ALREADY_PERFORMED` response treated as success in photo capture
+
+### Fixed
+- Security API errors (arm/disarm rejected) now show proper error messages instead of HTTP 500
+
 ## [0.5.0] - 2026-04-13
 
 ### Added

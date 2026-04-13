@@ -95,32 +95,9 @@ class AjaxCamera(CoordinatorEntity[AjaxCobrandedCoordinator], Camera):
         width: int | None = None,
         height: int | None = None,  # noqa: ARG002
     ) -> bytes | None:
-        """Return the last captured photo, or trigger a new capture."""
-        # Check if button.py already retrieved a URL for this device
+        """Return the last captured photo. Use the button entity to capture new photos."""
+        # Check if button.py just retrieved a new URL
         url = self.coordinator.last_photo_urls.pop(self._device_id, None)
-        if url:
-            return await self._download_image(url)
-
-        # Otherwise trigger full capture flow
-        result = await self.coordinator.devices_api.capture_photo(
-            self._hub_id, self._device_id, self._device_type
-        )
-        if not result:
-            return await self._get_last_image()
-
-        listener = self.coordinator.notification_listener
-        if not listener:
-            return await self._get_last_image()
-
-        # Wait for notification_id from FCM push
-        notification_id = await listener.wait_for_notification_id(self._device_id, timeout=15.0)
-        if not notification_id:
-            return await self._get_last_image()
-
-        # Get photo URL via streamNotificationMedia
-        url = await self.coordinator.media_api.get_photo_url(
-            notification_id, self._hub_id, timeout=15.0
-        )
         if url:
             return await self._download_image(url)
         return await self._get_last_image()
