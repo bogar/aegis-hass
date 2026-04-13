@@ -96,24 +96,51 @@ class AjaxCamera(CoordinatorEntity[AjaxCobrandedCoordinator], Camera):
         height: int | None = None,  # noqa: ARG002
     ) -> bytes | None:
         """Capture a new photo and return image bytes."""
-        import aiohttp  # noqa: PLC0415
-
-        # Trigger capture via v2
+        # Step 1: Trigger capture via v2
         result = await self.coordinator.devices_api.capture_photo(
             self._hub_id, self._device_id, self._device_type
         )
-        if result and self.coordinator.notification_listener:
-            # Wait for the photo URL from push notification
-            url = await self.coordinator.notification_listener.wait_for_photo_url(
-                self._device_id, timeout=15.0
-            )
+        if not result:
+            return self._last_image
+
+        listener = self.coordinator.notification_listener
+        if not listener:
+            return self._last_image
+
+        # Step 2: Wait for notification_id from FCM push
+        notification_id = await listener.wait_for_notification_id(self._device_id, timeout=15.0)
+        if not notification_id:
+            _LOGGER.debug("No notification_id received, trying URL from push")
+            # Fallback: try the old URL extraction method
+            url = await listener.wait_for_photo_url(self._device_id, timeout=5.0)
             if url:
-                self._last_image_url = url
-                session = async_get_clientsession(self.hass)
-                try:
-                    async with session.get(url, timeout=aiohttp.ClientTimeout(total=15)) as resp:
-                        if resp.status == 200:
-                            self._last_image = await resp.read()
-                except Exception:
-                    _LOGGER.exception("Failed to download photo")
+                return await self._download_image(url)
+            return self._last_image
+
+        # Step 3: Get photo URL via streamNotificationMedia
+        url = await self.coordinator.media_api.get_photo_url(
+            notification_id, self._hub_id, timeout=15.0
+        )
+        if not url:
+            _LOGGER.debug(
+                "No photo URL from media stream for notification %s",
+                notification_id[:20],
+            )
+            return self._last_image
+
+        # Step 4: Download the photo
+        return await self._download_image(url)
+
+    async def _download_image(self, url: str) -> bytes | None:
+        """Download image from URL and cache it."""
+        import aiohttp  # noqa: PLC0415
+
+        self._last_image_url = url
+        session = async_get_clientsession(self.hass)
+        try:
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=15)) as resp:
+                if resp.status == 200:
+                    self._last_image = await resp.read()
+        except Exception:
+            _LOGGER.exception("Failed to download photo")
         return self._last_image

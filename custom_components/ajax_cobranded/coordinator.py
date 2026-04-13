@@ -12,6 +12,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from custom_components.ajax_cobranded.api.devices import DevicesApi
 from custom_components.ajax_cobranded.api.hub_object import HubObjectApi, SimCardInfo
+from custom_components.ajax_cobranded.api.media import MediaApi
 from custom_components.ajax_cobranded.api.models import Device as DeviceModel
 from custom_components.ajax_cobranded.api.security import SecurityApi
 from custom_components.ajax_cobranded.api.spaces import SpacesApi
@@ -44,6 +45,7 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._security_api = SecurityApi(client)
         self._devices_api = DevicesApi(client)
         self._hub_object_api = HubObjectApi(client)
+        self._media_api = MediaApi(client)
         self.spaces: dict[str, Space] = {}
         self.devices: dict[str, Device] = {}
         self.sim_info: dict[str, SimCardInfo] = {}
@@ -63,6 +65,10 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     @property
     def hub_object_api(self) -> HubObjectApi:
         return self._hub_object_api
+
+    @property
+    def media_api(self) -> MediaApi:
+        return self._media_api
 
     @property
     def notification_listener(self) -> AjaxNotificationListener | None:
