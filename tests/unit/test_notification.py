@@ -193,7 +193,7 @@ class TestNotificationListener:
 
         loop = asyncio.get_event_loop()
         future: asyncio.Future[str | None] = loop.create_future()
-        listener._notification_id_callbacks["dev-1"] = future
+        listener._notification_id_callbacks["309F61FA"] = future
 
         # Real encoded data containing a 64-char hex notification ID
         listener._on_notification({"ENCODED_DATA": _REAL_PUSH_ENCODED_DATA}, "persistent-n1")
