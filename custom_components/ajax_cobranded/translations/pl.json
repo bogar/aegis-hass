@@ -135,11 +135,14 @@
             "vibration": {
                 "name": "Wibracja"
             },
+            "tamper": {
+                "name": "Sabotaż obudowy"
+            },
             "connectivity": {
                 "name": "Łączność"
             },
             "problem": {
-                "name": "Problem"
+                "name": "Problem urządzenia"
             }
         },
         "sensor": {

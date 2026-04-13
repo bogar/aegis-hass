@@ -35,7 +35,7 @@ BINARY_SENSOR_TYPES: dict[str, BinarySensorTypeInfo] = {
     "motion_detected": BinarySensorTypeInfo(BinarySensorDeviceClass.MOTION),
     "smoke_detected": BinarySensorTypeInfo(BinarySensorDeviceClass.SMOKE),
     "leak_detected": BinarySensorTypeInfo(BinarySensorDeviceClass.MOISTURE),
-    "tamper": BinarySensorTypeInfo(BinarySensorDeviceClass.TAMPER),
+    "tamper": BinarySensorTypeInfo(BinarySensorDeviceClass.TAMPER, "tamper"),
     "co_detected": BinarySensorTypeInfo(BinarySensorDeviceClass.CO),
     "high_temperature": BinarySensorTypeInfo(BinarySensorDeviceClass.HEAT),
     "monitoring_active": BinarySensorTypeInfo(BinarySensorDeviceClass.CONNECTIVITY, "monitoring"),

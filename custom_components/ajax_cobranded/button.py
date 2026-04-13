@@ -9,7 +9,7 @@ from homeassistant.components.button import ButtonEntity
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from custom_components.ajax_cobranded.camera import CAMERA_DEVICE_TYPES
+from custom_components.ajax_cobranded.camera import PHOD_DEVICE_TYPES
 from custom_components.ajax_cobranded.const import DOMAIN, MANUFACTURER
 from custom_components.ajax_cobranded.coordinator import AjaxCobrandedCoordinator
 
@@ -33,7 +33,7 @@ async def async_setup_entry(
             device_type=device.device_type,
         )
         for device_id, device in coordinator.devices.items()
-        if device.device_type in CAMERA_DEVICE_TYPES
+        if device.device_type in PHOD_DEVICE_TYPES
     ]
     async_add_entities(entities)
 

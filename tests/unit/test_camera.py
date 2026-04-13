@@ -26,7 +26,11 @@ def _stub_camera_module() -> None:
 
 _stub_camera_module()
 
-from custom_components.ajax_cobranded.camera import CAMERA_DEVICE_TYPES, AjaxCamera  # noqa: E402
+from custom_components.ajax_cobranded.camera import (  # noqa: E402
+    CAMERA_DEVICE_TYPES,
+    PHOD_DEVICE_TYPES,
+    AjaxCamera,
+)
 
 
 class TestCameraDeviceTypes:
@@ -38,6 +42,29 @@ class TestCameraDeviceTypes:
 
     def test_motion_cam_outdoor_is_camera(self) -> None:
         assert "motion_cam_outdoor" in CAMERA_DEVICE_TYPES
+
+    def test_motion_cam_fibra_is_camera(self) -> None:
+        assert "motion_cam_fibra" in CAMERA_DEVICE_TYPES
+
+
+class TestPhodDeviceTypes:
+    def test_motion_cam_phod_is_phod(self) -> None:
+        assert "motion_cam_phod" in PHOD_DEVICE_TYPES
+
+    def test_motion_cam_outdoor_phod_is_phod(self) -> None:
+        assert "motion_cam_outdoor_phod" in PHOD_DEVICE_TYPES
+
+    def test_motion_cam_fibra_base_is_phod(self) -> None:
+        assert "motion_cam_fibra_base" in PHOD_DEVICE_TYPES
+
+    def test_regular_motion_cam_is_not_phod(self) -> None:
+        assert "motion_cam" not in PHOD_DEVICE_TYPES
+
+    def test_motion_cam_outdoor_is_not_phod(self) -> None:
+        assert "motion_cam_outdoor" not in PHOD_DEVICE_TYPES
+
+    def test_phod_types_are_subset_of_camera_types(self) -> None:
+        assert PHOD_DEVICE_TYPES.issubset(CAMERA_DEVICE_TYPES)
 
 
 class TestAjaxCamera:

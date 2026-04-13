@@ -135,11 +135,14 @@
             "vibration": {
                 "name": "Vibrație"
             },
+            "tamper": {
+                "name": "Sabotaj carcasă"
+            },
             "connectivity": {
                 "name": "Conectivitate"
             },
             "problem": {
-                "name": "Problemă"
+                "name": "Problemă dispozitiv"
             }
         },
         "sensor": {

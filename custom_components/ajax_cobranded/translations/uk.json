@@ -135,11 +135,14 @@
             "vibration": {
                 "name": "Вібрація"
             },
+            "tamper": {
+                "name": "Зламування корпусу"
+            },
             "connectivity": {
                 "name": "Підключення"
             },
             "problem": {
-                "name": "Проблема"
+                "name": "Проблема пристрою"
             }
         },
         "sensor": {

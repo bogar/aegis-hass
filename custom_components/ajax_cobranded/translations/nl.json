@@ -135,11 +135,14 @@
             "vibration": {
                 "name": "Vibratie"
             },
+            "tamper": {
+                "name": "Behuizing sabotage"
+            },
             "connectivity": {
                 "name": "Verbinding"
             },
             "problem": {
-                "name": "Probleem"
+                "name": "Apparaatprobleem"
             }
         },
         "sensor": {

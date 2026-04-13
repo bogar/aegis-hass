@@ -135,11 +135,14 @@
             "vibration": {
                 "name": "Vibrazione"
             },
+            "tamper": {
+                "name": "Manomissione involucro"
+            },
             "connectivity": {
                 "name": "Connettività"
             },
             "problem": {
-                "name": "Problema"
+                "name": "Problema dispositivo"
             }
         },
         "sensor": {

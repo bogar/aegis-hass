@@ -135,11 +135,14 @@
             "vibration": {
                 "name": "Vibração"
             },
+            "tamper": {
+                "name": "Violação da caixa"
+            },
             "connectivity": {
                 "name": "Conectividade"
             },
             "problem": {
-                "name": "Problema"
+                "name": "Problema do dispositivo"
             }
         },
         "sensor": {
