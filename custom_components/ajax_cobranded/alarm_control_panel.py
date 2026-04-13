@@ -132,13 +132,7 @@ class AjaxAlarmControlPanel(CoordinatorEntity[AjaxCobrandedCoordinator], AlarmCo
 
     async def async_alarm_disarm(self, code: str | None = None) -> None:
         self._validate_code(code)
-        # Refresh state first to avoid acting on stale cached state — the server
-        # silently no-ops disarm() in night mode and disarm_from_night_mode() in
-        # armed mode (both return success without doing anything).
-        await self.coordinator.async_request_refresh()
-        space = self._space
-        if space is not None and space.security_state == SecurityState.NIGHT_MODE:
-            await self.coordinator.security_api.disarm_from_night_mode(self._space_id)
-        else:
-            await self.coordinator.security_api.disarm(self._space_id)
+        # The regular disarm() endpoint works from any armed state including
+        # night mode. disarm_from_night_mode() is rejected by the server.
+        await self.coordinator.security_api.disarm(self._space_id)
         await self.coordinator.async_request_refresh()
