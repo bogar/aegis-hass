@@ -95,9 +95,16 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             # Start persistent device streams on first update (once only)
             if not self._streams_started:
                 self._streams_started = True
+                # Fetch initial device snapshot synchronously so entities
+                # are created with real data (avoids unavailable on reload)
+                initial_devices: dict[str, Device] = {}
+                for space_id in self.spaces:
+                    space_devices = await self._devices_api.get_devices_snapshot(space_id)
+                    for device in space_devices:
+                        initial_devices[device.id] = device
+                self.devices = initial_devices
+                # Then start persistent streams for real-time updates
                 await self._start_device_streams()
-                # Devices are populated by the stream snapshot callback;
-                # return current (possibly empty) state on this first poll.
                 return {"spaces": self.spaces, "devices": self.devices}
 
             # Fallback poll: refresh devices from snapshot for each space

@@ -288,6 +288,7 @@ class TestStreamHandlers:
 
         mock_task = MagicMock(spec=asyncio.Task)
         coordinator._devices_api = MagicMock()
+        coordinator._devices_api.get_devices_snapshot = AsyncMock(return_value=[])
         coordinator._devices_api.start_device_stream = AsyncMock(return_value=mock_task)
 
         result = await coordinator._async_update_data()
