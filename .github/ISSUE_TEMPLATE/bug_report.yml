@@ -1,0 +1,115 @@
+name: Bug Report
+description: Report a bug with the Ajax Security integration
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Before opening an issue, please search existing issues (including closed ones) to avoid duplicates.**
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: input
+    id: ha-version
+    attributes:
+      label: Home Assistant version
+      description: "Settings > About > Core version"
+      placeholder: "2026.4.2"
+    validations:
+      required: true
+
+  - type: input
+    id: integration-version
+    attributes:
+      label: Integration version
+      description: "HACS > Ajax Security > version number"
+      placeholder: "0.6.4"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation
+    attributes:
+      label: Installation method
+      options:
+        - HACS
+        - Manual
+    validations:
+      required: true
+
+  - type: input
+    id: app-label
+    attributes:
+      label: App label (co-branded app)
+      description: "The application label you configured (e.g., Protegim_alarma, Ajax, ADT_Alarm)"
+      placeholder: "Protegim_alarma"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: fcm
+    attributes:
+      label: FCM push notifications configured?
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: |
+        Enable debug logging by adding this to `configuration.yaml`:
+        ```yaml
+        logger:
+          logs:
+            custom_components.ajax_cobranded: debug
+        ```
+        Then restart HA, reproduce the issue, and paste the relevant logs.
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Any other relevant information (hub model, device types, etc.)
+    validations:
+      required: false
