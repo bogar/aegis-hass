@@ -43,7 +43,9 @@
         "abort": {
             "already_configured": "Dit account is al geconfigureerd.",
             "account_locked": "Account is vergrendeld. Probeer het later opnieuw.",
-            "reauth_successful": "Herverificatie geslaagd."
+            "reauth_successful": "Herverificatie geslaagd.",
+            "already_in_progress": "Configuratie is al bezig. Voltooi of annuleer het bestaande proces.",
+            "reconfigure_successful": "Inloggegevens succesvol bijgewerkt."
         }
     },
     "options": {

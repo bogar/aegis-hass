@@ -43,7 +43,9 @@
         "abort": {
             "already_configured": "Questo account è già configurato.",
             "account_locked": "Account bloccato. Riprova più tardi.",
-            "reauth_successful": "Riautenticazione completata con successo."
+            "reauth_successful": "Riautenticazione completata con successo.",
+            "already_in_progress": "La configurazione è già in corso. Completa o annulla il flusso esistente.",
+            "reconfigure_successful": "Credenziali aggiornate con successo."
         }
     },
     "options": {

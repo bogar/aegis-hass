@@ -43,7 +43,9 @@
         "abort": {
             "already_configured": "To konto jest już skonfigurowane.",
             "account_locked": "Konto jest zablokowane. Spróbuj ponownie później.",
-            "reauth_successful": "Ponowne uwierzytelnienie zakończone sukcesem."
+            "reauth_successful": "Ponowne uwierzytelnienie zakończone sukcesem.",
+            "already_in_progress": "Konfiguracja już trwa. Zakończ lub anuluj istniejący proces.",
+            "reconfigure_successful": "Dane logowania zaktualizowane pomyślnie."
         }
     },
     "options": {

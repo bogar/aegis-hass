@@ -43,7 +43,9 @@
         "abort": {
             "already_configured": "Ce compte est déjà configuré.",
             "account_locked": "Compte verrouillé. Veuillez réessayer plus tard.",
-            "reauth_successful": "Ré-authentification réussie."
+            "reauth_successful": "Ré-authentification réussie.",
+            "already_in_progress": "La configuration est déjà en cours. Veuillez terminer ou annuler le flux existant.",
+            "reconfigure_successful": "Identifiants mis à jour avec succès."
         }
     },
     "options": {

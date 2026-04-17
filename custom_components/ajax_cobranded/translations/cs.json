@@ -43,7 +43,9 @@
         "abort": {
             "already_configured": "Tento účet je již nakonfigurován.",
             "account_locked": "Účet je uzamčen. Zkuste to prosím později.",
-            "reauth_successful": "Opětovné ověření proběhlo úspěšně."
+            "reauth_successful": "Opětovné ověření proběhlo úspěšně.",
+            "already_in_progress": "Konfigurace již probíhá. Dokončete nebo zrušte stávající postup.",
+            "reconfigure_successful": "Přihlašovací údaje úspěšně aktualizovány."
         }
     },
     "options": {

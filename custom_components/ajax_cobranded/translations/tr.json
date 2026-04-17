@@ -43,7 +43,9 @@
         "abort": {
             "already_configured": "Bu hesap zaten yapılandırılmış.",
             "account_locked": "Hesap kilitlendi. Lütfen daha sonra tekrar deneyin.",
-            "reauth_successful": "Yeniden doğrulama başarılı."
+            "reauth_successful": "Yeniden doğrulama başarılı.",
+            "already_in_progress": "Yapılandırma zaten devam ediyor. Mevcut akışı tamamlayın veya iptal edin.",
+            "reconfigure_successful": "Kimlik bilgileri başarıyla güncellendi."
         }
     },
     "options": {

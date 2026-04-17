@@ -43,7 +43,9 @@
         "abort": {
             "already_configured": "Acest cont este deja configurat.",
             "account_locked": "Contul este blocat. Vă rugăm să încercați mai târziu.",
-            "reauth_successful": "Reautentificare reușită."
+            "reauth_successful": "Reautentificare reușită.",
+            "already_in_progress": "Configurarea este deja în curs. Finalizați sau anulați fluxul existent.",
+            "reconfigure_successful": "Datele de autentificare au fost actualizate cu succes."
         }
     },
     "options": {

@@ -43,7 +43,9 @@
         "abort": {
             "already_configured": "Aquest compte ja esta configurat.",
             "account_locked": "Compte bloquejat. Torna-ho a provar mes tard.",
-            "reauth_successful": "Reautenticacio correcta."
+            "reauth_successful": "Reautenticacio correcta.",
+            "already_in_progress": "La configuració ja està en curs. Completeu o cancel·leu el flux existent.",
+            "reconfigure_successful": "Credencials actualitzades correctament."
         }
     },
     "options": {

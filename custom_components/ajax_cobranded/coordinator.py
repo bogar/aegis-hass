@@ -16,6 +16,7 @@ from custom_components.ajax_cobranded.api.hub_object import HubObjectApi, SimCar
 from custom_components.ajax_cobranded.api.media import MediaApi
 from custom_components.ajax_cobranded.api.models import Device as DeviceModel
 from custom_components.ajax_cobranded.api.security import SecurityApi
+from custom_components.ajax_cobranded.api.session import AuthenticationError
 from custom_components.ajax_cobranded.api.spaces import SpacesApi
 from custom_components.ajax_cobranded.const import DEFAULT_POLL_INTERVAL, DOMAIN
 
@@ -87,7 +88,17 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         try:
             # Login if not authenticated
             if not self._client.session.is_authenticated:
-                await self._client.login()
+                try:
+                    await self._client.login()
+                except AuthenticationError as err:
+                    # Slow down retries to prevent account lockout
+                    self.update_interval = timedelta(minutes=30)
+                    _LOGGER.error(
+                        "Authentication failed: %s — next retry in 30 min. "
+                        "Fix credentials via Settings → Integrations → Ajax → Reconfigure.",
+                        err,
+                    )
+                    raise UpdateFailed(f"Authentication failed: {err}") from err
 
             # Refresh spaces
             all_spaces = await self._spaces_api.list_spaces()
