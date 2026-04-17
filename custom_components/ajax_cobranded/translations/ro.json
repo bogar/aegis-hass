@@ -145,6 +145,12 @@
             },
             "problem": {
                 "name": "Problemă dispozitiv"
+            },
+            "ethernet": {
+                "name": "Ethernet"
+            },
+            "mains_power": {
+                "name": "Alimentare rețea"
             }
         },
         "sensor": {
@@ -162,6 +168,24 @@
             },
             "sim_imei": {
                 "name": "IMEI"
+            },
+            "connection_type": {
+                "name": "Tip conexiune"
+            },
+            "ethernet_ip": {
+                "name": "Adresă IP Ethernet"
+            },
+            "ethernet_gateway": {
+                "name": "Gateway Ethernet"
+            },
+            "ethernet_dns": {
+                "name": "DNS Ethernet"
+            },
+            "cellular_signal": {
+                "name": "Semnal celular"
+            },
+            "cellular_network": {
+                "name": "Rețea celulară"
             }
         },
         "switch": {

@@ -145,6 +145,12 @@
             },
             "problem": {
                 "name": "Problém zařízení"
+            },
+            "ethernet": {
+                "name": "Ethernet"
+            },
+            "mains_power": {
+                "name": "Napájení ze sítě"
             }
         },
         "sensor": {
@@ -162,6 +168,24 @@
             },
             "sim_imei": {
                 "name": "IMEI"
+            },
+            "connection_type": {
+                "name": "Typ připojení"
+            },
+            "ethernet_ip": {
+                "name": "IP adresa Ethernet"
+            },
+            "ethernet_gateway": {
+                "name": "Brána Ethernet"
+            },
+            "ethernet_dns": {
+                "name": "DNS Ethernet"
+            },
+            "cellular_signal": {
+                "name": "Signál mobilní sítě"
+            },
+            "cellular_network": {
+                "name": "Mobilní síť"
             }
         },
         "switch": {

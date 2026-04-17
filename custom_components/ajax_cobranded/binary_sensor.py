@@ -105,7 +105,7 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     coordinator: AjaxCobrandedCoordinator = entry.runtime_data
-    entities: list[AjaxBinarySensor | AjaxConnectivitySensor | AjaxProblemSensor] = []
+    entities: list[BinarySensorEntity] = []
     for device_id, device in coordinator.devices.items():
         sensor_keys = _DEVICE_TYPE_SENSORS.get(device.device_type, ["tamper"])
         for key in sensor_keys:
@@ -115,6 +115,14 @@ async def async_setup_entry(
                 )
         entities.append(AjaxConnectivitySensor(coordinator=coordinator, device_id=device_id))
         entities.append(AjaxProblemSensor(coordinator=coordinator, device_id=device_id))
+
+    # Hub-level network sensors from HTS
+    for space in coordinator.spaces.values():
+        if space.hub_id:
+            hub_device = coordinator.devices.get(space.hub_id)
+            if hub_device:
+                entities.append(AjaxHubEthernetSensor(coordinator, space.hub_id))
+                entities.append(AjaxHubPowerSensor(coordinator, space.hub_id))
     async_add_entities(entities)
 
 
@@ -232,3 +240,58 @@ class AjaxProblemSensor(CoordinatorEntity[AjaxCobrandedCoordinator], BinarySenso
         if device:
             return {"malfunctions_count": device.malfunctions}
         return {}
+
+
+class _HubNetworkBinarySensor(CoordinatorEntity[AjaxCobrandedCoordinator], BinarySensorEntity):
+    """Base for hub-level binary sensors sourced from HTS network data."""
+
+    _attr_has_entity_name = True
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator)
+        self._hub_id = hub_id
+        hub_device = coordinator.devices.get(hub_id)
+        if hub_device:
+            self._attr_device_info = DeviceInfo(
+                identifiers={(DOMAIN, hub_id)},
+                name=hub_device.name,
+                manufacturer=MANUFACTURER,
+                model=hub_device.device_type.replace("_", " ").title(),
+            )
+
+    @property
+    def available(self) -> bool:
+        return self._hub_id in self.coordinator.hub_network
+
+
+class AjaxHubEthernetSensor(_HubNetworkBinarySensor):
+    """Hub ethernet link status."""
+
+    _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
+    _attr_translation_key = "ethernet"
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator, hub_id)
+        self._attr_unique_id = f"ajax_cobranded_{hub_id}_ethernet"
+
+    @property
+    def is_on(self) -> bool:
+        state = self.coordinator.hub_network.get(self._hub_id)
+        return state.ethernet_connected if state else False
+
+
+class AjaxHubPowerSensor(_HubNetworkBinarySensor):
+    """Hub mains power status."""
+
+    _attr_device_class = BinarySensorDeviceClass.PLUG
+    _attr_translation_key = "mains_power"
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator, hub_id)
+        self._attr_unique_id = f"ajax_cobranded_{hub_id}_mains_power"
+
+    @property
+    def is_on(self) -> bool:
+        state = self.coordinator.hub_network.get(self._hub_id)
+        return state.externally_powered if state else False

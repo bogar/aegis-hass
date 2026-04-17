@@ -145,6 +145,12 @@
             },
             "problem": {
                 "name": "Apparaatprobleem"
+            },
+            "ethernet": {
+                "name": "Ethernet"
+            },
+            "mains_power": {
+                "name": "Netstroom"
             }
         },
         "sensor": {
@@ -162,6 +168,24 @@
             },
             "sim_imei": {
                 "name": "IMEI"
+            },
+            "connection_type": {
+                "name": "Verbindingstype"
+            },
+            "ethernet_ip": {
+                "name": "Ethernet IP-adres"
+            },
+            "ethernet_gateway": {
+                "name": "Ethernet-gateway"
+            },
+            "ethernet_dns": {
+                "name": "Ethernet-DNS"
+            },
+            "cellular_signal": {
+                "name": "Mobiel signaal"
+            },
+            "cellular_network": {
+                "name": "Mobiel netwerk"
             }
         },
         "switch": {

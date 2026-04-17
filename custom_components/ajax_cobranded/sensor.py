@@ -124,6 +124,16 @@ async def async_setup_entry(
         if space.hub_id in coordinator.sim_info:
             entities.append(AjaxSimImeiSensor(coordinator=coordinator, hub_id=space.hub_id))
 
+    # Hub-level network sensors from HTS
+    for space in coordinator.spaces.values():
+        if space.hub_id and coordinator.devices.get(space.hub_id):
+            entities.append(AjaxHubConnectionTypeSensor(coordinator, space.hub_id))
+            entities.append(AjaxHubEthernetIpSensor(coordinator, space.hub_id))
+            entities.append(AjaxHubEthernetGatewaySensor(coordinator, space.hub_id))
+            entities.append(AjaxHubEthernetDnsSensor(coordinator, space.hub_id))
+            entities.append(AjaxHubCellularSignalSensor(coordinator, space.hub_id))
+            entities.append(AjaxHubCellularNetworkSensor(coordinator, space.hub_id))
+
     async_add_entities(entities)
 
 
@@ -220,3 +230,123 @@ class AjaxSimImeiSensor(AjaxSimBaseSensor):
     def native_value(self) -> str | None:
         sim = self._sim_info
         return sim.imei if sim else None
+
+
+# ---------------------------------------------------------------------------
+# Hub network sensors (from HTS)
+# ---------------------------------------------------------------------------
+
+
+class _HubNetworkSensor(CoordinatorEntity[AjaxCobrandedCoordinator], SensorEntity):
+    """Base for hub-level sensors from HTS network data."""
+
+    _attr_has_entity_name = True
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator)
+        self._hub_id = hub_id
+        hub_device = coordinator.devices.get(hub_id)
+        if hub_device:
+            from custom_components.ajax_cobranded.const import MANUFACTURER  # noqa: PLC0415
+
+            self._attr_device_info = DeviceInfo(
+                identifiers={(DOMAIN, hub_id)},
+                name=hub_device.name,
+                manufacturer=MANUFACTURER,
+                model=hub_device.device_type.replace("_", " ").title(),
+            )
+
+    @property
+    def available(self) -> bool:
+        return self._hub_id in self.coordinator.hub_network
+
+
+class AjaxHubConnectionTypeSensor(_HubNetworkSensor):
+    """Primary connection type: ethernet, wifi, gsm, or none."""
+
+    _attr_translation_key = "connection_type"
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator, hub_id)
+        self._attr_unique_id = f"ajax_cobranded_{hub_id}_connection_type"
+
+    @property
+    def native_value(self) -> str | None:
+        state = self.coordinator.hub_network.get(self._hub_id)
+        return state.primary_connection if state else None
+
+
+class AjaxHubEthernetIpSensor(_HubNetworkSensor):
+    """Hub ethernet IP address."""
+
+    _attr_translation_key = "ethernet_ip"
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator, hub_id)
+        self._attr_unique_id = f"ajax_cobranded_{hub_id}_ethernet_ip"
+
+    @property
+    def native_value(self) -> str | None:
+        state = self.coordinator.hub_network.get(self._hub_id)
+        return state.ethernet_ip if state and state.ethernet_ip else None
+
+
+class AjaxHubEthernetGatewaySensor(_HubNetworkSensor):
+    """Hub ethernet gateway address."""
+
+    _attr_translation_key = "ethernet_gateway"
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator, hub_id)
+        self._attr_unique_id = f"ajax_cobranded_{hub_id}_ethernet_gateway"
+
+    @property
+    def native_value(self) -> str | None:
+        state = self.coordinator.hub_network.get(self._hub_id)
+        return state.ethernet_gateway if state and state.ethernet_gateway else None
+
+
+class AjaxHubEthernetDnsSensor(_HubNetworkSensor):
+    """Hub ethernet DNS server."""
+
+    _attr_translation_key = "ethernet_dns"
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator, hub_id)
+        self._attr_unique_id = f"ajax_cobranded_{hub_id}_ethernet_dns"
+
+    @property
+    def native_value(self) -> str | None:
+        state = self.coordinator.hub_network.get(self._hub_id)
+        return state.ethernet_dns if state and state.ethernet_dns else None
+
+
+class AjaxHubCellularSignalSensor(_HubNetworkSensor):
+    """Hub cellular signal level."""
+
+    _attr_translation_key = "cellular_signal"
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator, hub_id)
+        self._attr_unique_id = f"ajax_cobranded_{hub_id}_cellular_signal"
+
+    @property
+    def native_value(self) -> str | None:
+        state = self.coordinator.hub_network.get(self._hub_id)
+        return state.gsm_signal_level if state else None
+
+
+class AjaxHubCellularNetworkSensor(_HubNetworkSensor):
+    """Hub cellular network type (2g/3g/4g)."""
+
+    _attr_translation_key = "cellular_network"
+
+    def __init__(self, coordinator: AjaxCobrandedCoordinator, hub_id: str) -> None:
+        super().__init__(coordinator, hub_id)
+        self._attr_unique_id = f"ajax_cobranded_{hub_id}_cellular_network"
+
+    @property
+    def native_value(self) -> str | None:
+        state = self.coordinator.hub_network.get(self._hub_id)
+        return state.gsm_network_type if state else None

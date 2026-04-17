@@ -145,6 +145,12 @@
             },
             "problem": {
                 "name": "Problema del dispositiu"
+            },
+            "ethernet": {
+                "name": "Ethernet"
+            },
+            "mains_power": {
+                "name": "Alimentació externa"
             }
         },
         "sensor": {
@@ -162,6 +168,24 @@
             },
             "sim_imei": {
                 "name": "IMEI"
+            },
+            "connection_type": {
+                "name": "Tipus de connexió"
+            },
+            "ethernet_ip": {
+                "name": "Adreça IP Ethernet"
+            },
+            "ethernet_gateway": {
+                "name": "Porta d'enllaç Ethernet"
+            },
+            "ethernet_dns": {
+                "name": "DNS Ethernet"
+            },
+            "cellular_signal": {
+                "name": "Senyal cel·lular"
+            },
+            "cellular_network": {
+                "name": "Xarxa cel·lular"
             }
         },
         "switch": {

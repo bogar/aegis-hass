@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-04-17
+
+### Added
+- Hub network sensors via HTS protocol (resolves #2, #3, #5):
+  - `binary_sensor: Ethernet` — hub ethernet link status
+  - `binary_sensor: Mains power` — hub external power supply
+  - `sensor: Connection type` — primary connection (ethernet/wifi/gsm)
+  - `sensor: Ethernet IP address` — hub IP
+  - `sensor: Ethernet gateway` — hub gateway
+  - `sensor: Ethernet DNS` — hub DNS server
+  - `sensor: Cellular signal` — GSM signal level (weak/normal/strong)
+  - `sensor: Cellular network` — network type (2g/3g/4g)
+- HTS binary protocol client for real-time hub network data
+- Translations for all new sensors in 14 languages
+- `pycryptodome` dependency for HTS protocol encryption
+
+### Notes
+- HTS connection runs alongside gRPC — graceful degradation if unavailable
+- No additional configuration required — uses existing credentials
+- Only one HTS connection per account allowed (shared with mobile app)
+
 ## [0.7.0] - 2026-04-16
 
 ### Changed (BREAKING)

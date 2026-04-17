@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Any
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from custom_components.ajax_cobranded.api.devices import DevicesApi
+from custom_components.ajax_cobranded.api.hts.client import HtsClient, HtsConnectionError
 from custom_components.ajax_cobranded.api.hub_object import HubObjectApi, SimCardInfo
 from custom_components.ajax_cobranded.api.media import MediaApi
 from custom_components.ajax_cobranded.api.models import Device as DeviceModel
@@ -22,6 +23,7 @@ if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
     from custom_components.ajax_cobranded.api.client import AjaxGrpcClient
+    from custom_components.ajax_cobranded.api.hts.hub_state import HubNetworkState
     from custom_components.ajax_cobranded.api.models import Device, Space
     from custom_components.ajax_cobranded.notification import AjaxNotificationListener
 
@@ -56,6 +58,10 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.last_photo_urls: dict[str, str] = {}
         # space_id -> (expiry_time, security_state)
         self._optimistic_space_states: dict[str, tuple[float, Any]] = {}
+        # HTS client for hub network data (ethernet, wifi, gsm, power)
+        self._hts_client: HtsClient | None = None
+        self._hts_task: asyncio.Task[None] | None = None
+        self.hub_network: dict[str, HubNetworkState] = {}
 
     @property
     def security_api(self) -> SecurityApi:
@@ -121,6 +127,8 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 self.devices = initial_devices
                 # Then start persistent streams for real-time updates
                 await self._start_device_streams()
+                # Start HTS for hub network data (non-blocking, graceful degradation)
+                await self._start_hts()
                 return {"spaces": self.spaces, "devices": self.devices}
 
             # Fallback poll: refresh devices from snapshot for each space
@@ -134,6 +142,34 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             return {"spaces": self.spaces, "devices": self.devices}
         except Exception as err:
             raise UpdateFailed("Error fetching Ajax data") from err
+
+    async def _start_hts(self) -> None:
+        """Start HTS connection for hub network data (graceful degradation)."""
+        try:
+            session = self._client.session
+            token_hex = session._session_token
+            if not token_hex:
+                _LOGGER.debug("No session token, skipping HTS")
+                return
+            self._hts_client = HtsClient(
+                login_token=bytes.fromhex(token_hex),
+                user_hex_id=session._user_hex_id or "",
+                device_id=session._device_id,
+                app_label=session._app_label,
+            )
+            result = await self._hts_client.connect()
+            _LOGGER.info("HTS connected, %d hub(s)", len(result.hubs))
+            self._hts_task = asyncio.create_task(
+                self._hts_client.listen(on_state_update=self._on_hts_update)
+            )
+        except (HtsConnectionError, Exception):
+            _LOGGER.debug("HTS connection failed (network sensors unavailable)", exc_info=True)
+            self._hts_client = None
+
+    def _on_hts_update(self, hub_id: str, state: HubNetworkState) -> None:
+        """Handle hub network state update from HTS."""
+        self.hub_network[hub_id] = state
+        self.async_set_updated_data({"spaces": self.spaces, "devices": self.devices})
 
     async def _start_device_streams(self) -> None:
         """Start persistent device streams for all spaces."""
@@ -251,6 +287,14 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 with contextlib.suppress(asyncio.CancelledError):
                     await task
         self._stream_tasks.clear()
+
+        # Stop HTS
+        if self._hts_task and not self._hts_task.done():
+            self._hts_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await self._hts_task
+        if self._hts_client:
+            await self._hts_client.close()
 
         if self._notification_listener:
             await self._notification_listener.async_stop()

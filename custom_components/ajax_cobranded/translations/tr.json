@@ -145,6 +145,12 @@
             },
             "problem": {
                 "name": "Cihaz sorunu"
+            },
+            "ethernet": {
+                "name": "Ethernet"
+            },
+            "mains_power": {
+                "name": "Şebeke gücü"
             }
         },
         "sensor": {
@@ -162,6 +168,24 @@
             },
             "sim_imei": {
                 "name": "IMEI"
+            },
+            "connection_type": {
+                "name": "Bağlantı türü"
+            },
+            "ethernet_ip": {
+                "name": "Ethernet IP adresi"
+            },
+            "ethernet_gateway": {
+                "name": "Ethernet ağ geçidi"
+            },
+            "ethernet_dns": {
+                "name": "Ethernet DNS"
+            },
+            "cellular_signal": {
+                "name": "Hücresel sinyal"
+            },
+            "cellular_network": {
+                "name": "Hücresel ağ"
             }
         },
         "switch": {

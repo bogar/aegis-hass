@@ -145,6 +145,12 @@
             },
             "problem": {
                 "name": "Проблема пристрою"
+            },
+            "ethernet": {
+                "name": "Ethernet"
+            },
+            "mains_power": {
+                "name": "Зовнішнє живлення"
             }
         },
         "sensor": {
@@ -162,6 +168,24 @@
             },
             "sim_imei": {
                 "name": "IMEI"
+            },
+            "connection_type": {
+                "name": "Тип з'єднання"
+            },
+            "ethernet_ip": {
+                "name": "IP-адреса Ethernet"
+            },
+            "ethernet_gateway": {
+                "name": "Шлюз Ethernet"
+            },
+            "ethernet_dns": {
+                "name": "DNS Ethernet"
+            },
+            "cellular_signal": {
+                "name": "Сигнал мобільної мережі"
+            },
+            "cellular_network": {
+                "name": "Мобільна мережа"
             }
         },
         "switch": {

@@ -16,8 +16,9 @@ Ajax Systems provides co-branded versions of their mobile app to security compan
 
 - **Alarm Control Panel**: Arm away, disarm, night mode, group arming with PIN code support
 - **Force Arm Services**: `ajax_cobranded.force_arm` and `ajax_cobranded.force_arm_night` to arm ignoring open sensors
-- **Binary Sensors**: Door open/close, motion detection, smoke, leak, tamper, CO, heat, glass break, vibration, CRA monitoring, cellular connection, lid tamper, external contacts, anti-masking, interference detection
-- **Sensors**: Battery level, temperature, humidity, CO2, signal strength, GSM type (2G/3G/4G), Wi-Fi signal level, IMEI
+- **Binary Sensors**: Door open/close, motion detection, smoke, leak, tamper, CO, heat, glass break, vibration, CRA monitoring, cellular connection, lid tamper, external contacts, anti-masking, interference detection, ethernet link, mains power
+- **Hub Network**: Real-time hub network data — ethernet/wifi/gsm connection status, IP addressing, cellular signal strength and network type, power supply status
+- **Sensors**: Battery level, temperature, humidity, CO2, signal strength, GSM type (2G/3G/4G), Wi-Fi signal level, IMEI, Ethernet IP/gateway/DNS, cellular signal/network, connection type
 - **Switches**: Relays, wall switches, sockets (multi-channel support)
 - **Lights**: Dimmers with brightness control
 - **Cameras**: MotionCam Photo on Demand — capture photos and view them in HA (PhOD models only)
