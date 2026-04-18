@@ -635,3 +635,92 @@
           - {{ name }}: OBERTA
           {% endif %}
           {% endfor %}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 22. SECURITY EVENT — Notify with device details
+# ─────────────────────────────────────────────────────────────────────────────
+# Uses the enriched event data (device_name, device_type, room_name) to send
+# detailed notifications about any security event.
+
+- alias: "Security event — detailed notification"
+  id: security_event_detailed_notification
+  trigger:
+    - trigger: state
+      entity_id: event.my_hub_security_event
+  condition:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type is defined }}"
+  action:
+    - action: notify.mobile_app_user
+      data:
+        title: "Security: {{ trigger.to_state.attributes.event_type | replace('_', ' ') | title }}"
+        message: >-
+          {% set attrs = trigger.to_state.attributes %}
+          {{ attrs.get('device_name', 'Unknown device') }}
+          {% if attrs.get('room_name') %} ({{ attrs.room_name }}){% endif %}
+          — {{ attrs.event_type | replace('_', ' ') }}
+          {% if attrs.get('device_type') %}[{{ attrs.device_type }}]{% endif %}
+        data:
+          push:
+            sound: default
+          url: /lovelace/seguridad
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 23. INTRUSION ALARM — Camera capture + rich notification
+# ─────────────────────────────────────────────────────────────────────────────
+# When an intrusion alarm fires, capture photos from all cameras and notify
+# with the name of the device that detected the intrusion.
+
+- alias: "Intrusion alarm — capture + notify"
+  id: intrusion_alarm_capture_notify
+  trigger:
+    - trigger: state
+      entity_id: event.my_hub_security_event
+      attribute: event_type
+      to: "alarm"
+  action:
+    - parallel:
+        - action: button.press
+          target:
+            entity_id:
+              - button.hallway_capture_photo
+              - button.living_capture_photo
+        - action: notify.mobile_app_user
+          data:
+            title: "INTRUSION ALARM"
+            message: >-
+              Alarm triggered by {{ trigger.to_state.attributes.get('device_name', 'unknown') }}
+              {% if trigger.to_state.attributes.get('room_name') %}
+              in {{ trigger.to_state.attributes.room_name }}
+              {% endif %}
+            data:
+              push:
+                sound:
+                  name: default
+                  critical: 1
+              url: /lovelace/seguridad
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 24. TAMPER DETECTION — Immediate alert
+# ─────────────────────────────────────────────────────────────────────────────
+# Someone is physically tampering with a device. Include which device.
+
+- alias: "Tamper — alert with device name"
+  id: tamper_alert_device_name
+  trigger:
+    - trigger: state
+      entity_id: event.my_hub_security_event
+      attribute: event_type
+      to: "tamper"
+  action:
+    - action: notify.mobile_app_user
+      data:
+        title: "TAMPER ALERT"
+        message: >-
+          Device tampered: {{ trigger.to_state.attributes.get('device_name', 'unknown') }}
+          ({{ trigger.to_state.attributes.get('device_type', '') | replace('_', ' ') | lower }})
+        data:
+          push:
+            sound:
+              name: default
+              critical: 1

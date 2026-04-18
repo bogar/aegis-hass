@@ -21,7 +21,7 @@ from custom_components.ajax_cobranded.api.hts.protocol import ETX, STX
 def _make_client(**kwargs: object) -> HtsClient:
     defaults = {
         "login_token": b"\xde\xad\xbe\xef",
-        "user_hex_id": "1B99007F",
+        "user_hex_id": "C9D0E1F2",
         "device_id": "device123",
         "app_label": "com.test.app",
     }
@@ -60,8 +60,8 @@ class TestInit:
         assert client._seq_num == 1
 
     def test_sender_id_from_user_hex_id(self) -> None:
-        client = _make_client(user_hex_id="1B99007F")
-        assert client._sender_id == 0x1B99007F
+        client = _make_client(user_hex_id="C9D0E1F2")
+        assert client._sender_id == 0xC9D0E1F2
         assert client._receiver_id == 0
 
     def test_connection_token_empty(self) -> None:

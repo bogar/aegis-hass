@@ -125,7 +125,7 @@ FCM Push → notification.py → parse ENCODED_DATA → decode proto →
     "event_type": "arm",
     "device_name": "Front Door",
     "device_type": "DoorProtect",
-    "user_name": "Basilio",
+    "user_name": "Carlos",
     "zone": "Living Room",
 }
 ```

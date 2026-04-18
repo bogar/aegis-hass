@@ -37,9 +37,29 @@ class TestAjaxSecurityEvent:
         entity._trigger_event = MagicMock()
         entity.async_write_ha_state = MagicMock()
 
-        entity.handle_event("alarm", {"device_name": "Front Door"})
+        entity.handle_event("alarm", {"raw_tag": "intrusion_alarm", "transition": "triggered"})
 
-        entity._trigger_event.assert_called_once_with("alarm", {"device_name": "Front Door"})
+        entity._trigger_event.assert_called_once_with(
+            "alarm", {"raw_tag": "intrusion_alarm", "transition": "triggered"}
+        )
+        entity.async_write_ha_state.assert_called_once()
+
+    def test_handle_event_with_source_info(self) -> None:
+        entity = self._make_event_entity()
+        entity._trigger_event = MagicMock()
+        entity.async_write_ha_state = MagicMock()
+
+        data = {
+            "raw_tag": "door_opened",
+            "transition": "triggered",
+            "device_name": "HALLWAY",
+            "device_id": "A1B2C3D4",
+            "device_type": "MOTION_CAM_PHOD",
+            "room_name": "Hall",
+        }
+        entity.handle_event("door_open", data)
+
+        entity._trigger_event.assert_called_once_with("door_open", data)
         entity.async_write_ha_state.assert_called_once()
 
     def test_handle_event_ignores_unknown_type(self) -> None:

@@ -116,13 +116,13 @@ sections:
       # ─── Camera Feeds ───
       - type: picture-entity
         entity: camera.hallway_camera
-        name: Passadis
+        name: Hallway
         camera_view: auto
         show_state: true
 
       - type: picture-entity
         entity: camera.dining_camera
-        name: Menjador
+        name: Living
         camera_view: auto
         show_state: true
 
@@ -131,7 +131,7 @@ sections:
         cards:
           - type: button
             entity: button.hallway_capturar_foto
-            name: Foto Passadis
+            name: Foto Hallway
             icon: mdi:camera
             tap_action:
               action: call-service
@@ -142,7 +142,7 @@ sections:
 
           - type: button
             entity: button.dining_capturar_foto
-            name: Foto Menjador
+            name: Foto Living
             icon: mdi:camera
             tap_action:
               action: call-service
@@ -157,15 +157,15 @@ sections:
         show_header_toggle: false
         entities:
           - entity: binary_sensor.hallway_motion
-            name: Passadis
+            name: Hallway
             icon: mdi:motion-sensor
           - entity: sensor.hallway_battery
-            name: Bateria Passadis
+            name: Bateria Hallway
           - entity: binary_sensor.dining_motion
-            name: Menjador
+            name: Living
             icon: mdi:motion-sensor
           - entity: sensor.dining_battery
-            name: Bateria Menjador
+            name: Bateria Living
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SECTION 4: Temperatures
@@ -197,10 +197,10 @@ sections:
             name: Vestidor
             icon: mdi:thermometer
           - entity: sensor.hallway_temperature
-            name: Passadis
+            name: Hallway
             icon: mdi:thermometer
           - entity: sensor.dining_temperature
-            name: Menjador
+            name: Living
             icon: mdi:thermometer
           - entity: sensor.keypad_temperature
             name: Teclat
@@ -218,9 +218,9 @@ sections:
           - entity: sensor.main_door_temperature
             name: Entrada
           - entity: sensor.hallway_temperature
-            name: Passadis
+            name: Hallway
           - entity: sensor.dining_temperature
-            name: Menjador
+            name: Living
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SECTION 5: Security Details & Diagnostics
@@ -246,9 +246,9 @@ sections:
           - entity: binary_sensor.dressing_window_tamper
             name: Finestra Vestidor
           - entity: binary_sensor.hallway_tamper
-            name: Passadis
+            name: Hallway
           - entity: binary_sensor.dining_tamper
-            name: Menjador
+            name: Living
           - entity: binary_sensor.keypad_tamper
             name: Teclat
 
@@ -271,9 +271,9 @@ sections:
           - entity: binary_sensor.dressing_window_connectivity
             name: Finestra Vestidor
           - entity: binary_sensor.hallway_connectivity
-            name: Passadis
+            name: Hallway
           - entity: binary_sensor.dining_connectivity
-            name: Menjador
+            name: Living
           - entity: binary_sensor.keypad_connectivity
             name: Teclat
 
@@ -298,9 +298,9 @@ sections:
           - entity: binary_sensor.dressing_window_problem
             name: Finestra Vestidor
           - entity: binary_sensor.hallway_problem
-            name: Passadis
+            name: Hallway
           - entity: binary_sensor.dining_problem
-            name: Menjador
+            name: Living
           - entity: binary_sensor.keypad_problem
             name: Teclat
 
@@ -347,9 +347,9 @@ sections:
         hours_to_show: 24
         entities:
           - entity: binary_sensor.hallway_motion
-            name: Passadis
+            name: Hallway
           - entity: binary_sensor.dining_motion
-            name: Menjador
+            name: Living
 
       # ─── Hub Connectivity History ───
       - type: history-graph

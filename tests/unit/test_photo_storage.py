@@ -8,7 +8,7 @@ from custom_components.ajax_cobranded.photo_storage import _overlay_timestamp, _
 class TestSanitizeName:
     def test_simple_name(self) -> None:
         # Accented characters are alphanumeric in Python (isalnum() returns True)
-        assert _sanitize_name("PASSADÍS") == "PASSADÍS"
+        assert _sanitize_name("HALLWAY") == "HALLWAY"
 
     def test_name_with_spaces(self) -> None:
         assert _sanitize_name("Front Door") == "Front Door"

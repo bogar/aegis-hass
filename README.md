@@ -175,6 +175,19 @@ Door open/close and motion detection are **transient events** — they appear wh
 ### Security event entity
 Each hub has a **Security event** entity that fires events from FCM push notifications: alarm, arm/disarm, tamper, panic, fire, flood, motion, glass break, CO, and more. Use these in automations to trigger actions on security events.
 
+Each event includes enriched data attributes:
+
+| Attribute | Description | Example |
+|-----------|-------------|---------|
+| `raw_tag` | Original protobuf event tag | `intrusion_alarm`, `door_opened` |
+| `transition` | Event transition state | `triggered`, `restored` |
+| `device_name` | Name of the device that triggered the event | `Front Door`, `Hallway Cam` |
+| `device_id` | Hex ID of the source device | `A1B2C3D4` |
+| `device_type` | Device type enum | `DOOR_PROTECT`, `MOTION_CAM_PHOD` |
+| `room_name` | Room the device is assigned to (when available) | `Kitchen`, `Entrance` |
+
+Use these in automation templates, e.g. `{{ trigger.event.data.device_name }}`.
+
 ### Security sensors
 - **Case tamper** — physical manipulation of device enclosure
 - **Device problem** — device malfunction or communication issue

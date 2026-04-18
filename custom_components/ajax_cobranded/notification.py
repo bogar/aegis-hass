@@ -214,7 +214,7 @@ class AjaxNotificationListener:
                 self._last_notification_id = notif_id
                 _LOGGER.debug("Extracted notification_id: %s", notif_id[:20])
                 # Resolve the future for the matching device_id
-                # notification_id contains the device_id (e.g., ...309F61FA...)
+                # notification_id contains the device_id (e.g., ...A1B2C3D4...)
                 for device_id, future in list(self._notification_id_callbacks.items()):
                     if not future.done() and device_id.upper() in notif_id.upper():
                         future.set_result(notif_id)
@@ -282,6 +282,10 @@ class AjaxNotificationListener:
             event_info = self._extract_event_from_proto(raw)
             if event_info:
                 event_type, event_data = event_info
+                # Enrich with source device info (name, room, type)
+                source_info = self._extract_source_info(raw)
+                if source_info:
+                    event_data.update(source_info)
                 # Try to route to the correct space by matching hub_id from raw bytes
                 target_space = self._find_space_for_event(raw)
                 if target_space:
@@ -379,6 +383,57 @@ class AjaxNotificationListener:
             else:
                 i += 1
         return candidates
+
+    @staticmethod
+    def _extract_source_info(raw: bytes) -> dict[str, Any]:
+        """Extract device source information from raw protobuf bytes.
+
+        Scans for HubNotificationSource by looking for the field pattern
+        (type varint + id string + name string) and attempting proto parsing
+        at each potential start position.
+        """
+        import sys  # noqa: PLC0415
+        from pathlib import Path  # noqa: PLC0415
+
+        proto_path = str(Path(__file__).parent / "proto")
+        if proto_path not in sys.path:
+            sys.path.append(proto_path)
+
+        try:
+            from systems.ajax.api.ecosystem.v2.communicationsvc.mobile.commonmodels.notification.hub import (  # noqa: PLC0415, E501
+                source_pb2,
+                source_type_pb2,
+            )
+        except ImportError:
+            _LOGGER.debug("Source proto not available")
+            return {}
+
+        # Build reverse map from enum value to name
+        source_type_enum = source_type_pb2.HubNotificationSourceType.DESCRIPTOR
+        type_name_map = {v.number: v.name for v in source_type_enum.values}
+
+        # Scan for field 1 varint (0x08 XX) which is the source type field.
+        # Try parsing HubNotificationSource from each potential start.
+        for i in range(len(raw) - 5):
+            if raw[i] != 0x08:
+                continue
+            # Try multiple slice lengths to find a valid parse
+            for end in range(i + 10, min(i + 80, len(raw) + 1)):
+                try:
+                    source = source_pb2.HubNotificationSource()
+                    source.ParseFromString(raw[i:end])
+                    if source.name and source.id and source.type > 0:
+                        result: dict[str, Any] = {
+                            "device_name": source.name,
+                            "device_id": source.id,
+                            "device_type": type_name_map.get(source.type, str(source.type)),
+                        }
+                        if source.HasField("_room_name") and source.room_name:
+                            result["room_name"] = source.room_name
+                        return result
+                except Exception:
+                    continue
+        return {}
 
     @staticmethod
     def _extract_event_raw(raw: bytes) -> tuple[str, dict[str, Any]] | None:

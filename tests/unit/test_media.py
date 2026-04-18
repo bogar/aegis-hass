@@ -34,9 +34,9 @@ class TestProtobufEncoding:
     def test_stream_notification_media_request_encoding(self) -> None:
         """Verify the full request encoding for streamNotificationMedia."""
         notification_id = "ABC123"
-        hub_hex_id = "002B1A51"
+        hub_hex_id = "E5F6A7B8"
         origin_msg = _encode_string_field(1, hub_hex_id)
         request = _encode_string_field(1, notification_id) + _encode_embedded_message(2, origin_msg)
         # Should contain both strings
         assert b"ABC123" in request
-        assert b"002B1A51" in request
+        assert b"E5F6A7B8" in request

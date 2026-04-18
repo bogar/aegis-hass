@@ -19,17 +19,16 @@ _FCM_KWARGS = {
 
 # Real ENCODED_DATA from a photo capture push notification (base64)
 _REAL_PUSH_ENCODED_DATA = (
-    "Cu0CCkA0ODQyNTM2NjYyOTE1NjAwNjc4NjRBRDA3NEE3QUM2QzJERjVFODM2MzA5RjYx"
-    "RkEwMDAwMDE5RDg4NTdEODlFEhgwMDAwMDE5ZDg4NTdkODllN2M0Yzg3ZDQaMQoYNjc4"
-    "NjRhZDA3NGE3YWM2YzJkZjVlODM2EhVBMTYxMDIgLSBCQVNJTElPIFZFUkEiDAiXi/XO"
-    "BhCA+8bSAigEMAI6ZApiCicKCDAwMkIxQTUxEhVBMTYxMDIgLSBCQVNJTElPIFZFUkEY"
-    "ASAKKAESCQoDogMAEgIKABosCCcSCDMwOUY2MUZBGglQQVNTQUTDjVMgASgBqgEIMDAw"
-    "MDAwMDGyAQNQSVNAAaoBL9oGLAoOSG9tZSBBc3Npc3RhbnQSAggBGhYKFCIIMUI5OTAw"
-    "N0YiCDc3REQ2QTE0qgEfwgYcCAwSCDFCOTkwMDdGGg5Ib21lIEFzc2lzdGFudKoBDaIH"
-    "CgoGCJWL9c4GEAE="
+    "Cu0CCkA0ODQyNTM2NjYyOTE1NjAwQUFCQjExMjIzMzQ0NTU2Njc3ODg5OTAwQTFCMkMzRDQw"
+    "MDAwMDE5RDg4NTdEODlFEhgwMDAwMDE5ZDg4NTdkODllN2M0Yzg3ZDQaMQoYYWFiYjExMjIz"
+    "MzQ0NTU2Njc3ODg5OTAwEhVIMlBMVVMgLSBDQVJMT1MgTE9QRVoiDAiXi/XOBhCA+8bSAigE"
+    "MAI6ZApiCicKCEU1RjZBN0I4EhVIMlBMVVMgLSBDQVJMT1MgTE9QRVoYASAKKAESCQoDogMA"
+    "EgIKABosCCcSCEExQjJDM0Q0GglWRVNUSUJVTE8gASgBqgEIMDAwMDAwMDGyAQNIQUxAAaoB"
+    "L9oGLAoOSG9tZSBBc3Npc3RhbnQSAggBGhYKFCIIQzlEMEUxRjIiCEYzRTRENUM2qgEfwgYc"
+    "CAwSCEM5RDBFMUYyGg5Ib21lIEFzc2lzdGFudKoBDaIHCgoGCJWL9c4GEAE="
 )
 
-_EXPECTED_NOTIFICATION_ID = "484253666291560067864AD074A7AC6C2DF5E836309F61FA0000019D8857D89E"
+_EXPECTED_NOTIFICATION_ID = "4842536662915600AABB11223344556677889900A1B2C3D40000019D8857D89E"
 
 
 class TestNotificationListener:
@@ -179,6 +178,27 @@ class TestNotificationListener:
         result = AjaxNotificationListener.extract_notification_id(encoded)
         assert result is None
 
+    def test_extract_source_from_real_push(self) -> None:
+        """Extract device source info from real push notification data."""
+        raw = base64.b64decode(_REAL_PUSH_ENCODED_DATA)
+        result = AjaxNotificationListener._extract_source_info(raw)
+        assert result is not None
+        assert result["device_name"] == "VESTIBULO"
+        assert result["device_id"] == "A1B2C3D4"
+        assert result["device_type"] == "MOTION_CAM_PHOD"
+
+    def test_extract_source_returns_empty_for_garbage(self) -> None:
+        """Garbage data returns empty dict."""
+        result = AjaxNotificationListener._extract_source_info(b"\x00\x01\x02\x03")
+        assert result == {}
+
+    def test_extract_source_returns_empty_for_no_name(self) -> None:
+        """Source without name returns empty dict (hub-level events)."""
+        # Minimal valid protobuf with only type field (field 1, varint 1 = HUB)
+        raw = b"\x08\x01"
+        result = AjaxNotificationListener._extract_source_info(raw)
+        assert result == {}
+
     @pytest.mark.asyncio
     async def test_on_notification_extracts_notification_id(self) -> None:
         """ENCODED_DATA with a notification_id resolves pending notification_id futures."""
@@ -193,7 +213,7 @@ class TestNotificationListener:
 
         loop = asyncio.get_event_loop()
         future: asyncio.Future[str | None] = loop.create_future()
-        listener._notification_id_callbacks["309F61FA"] = future
+        listener._notification_id_callbacks["A1B2C3D4"] = future
 
         # Real encoded data containing a 64-char hex notification ID
         listener._on_notification({"ENCODED_DATA": _REAL_PUSH_ENCODED_DATA}, "persistent-n1")

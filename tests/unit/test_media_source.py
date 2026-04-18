@@ -102,7 +102,7 @@ class TestAjaxPhotoMediaSource:
     @pytest.mark.asyncio
     async def test_browse_root_with_folders(self, tmp_path: Path) -> None:
         media_dir = tmp_path / "media"
-        for name in ["PASSADIS", "MENJADOR"]:
+        for name in ["HALLWAY", "LIVING"]:
             folder = media_dir / "ajax_photos" / name
             folder.mkdir(parents=True)
             (folder / "2026-04-14_00-23-18.jpg").write_bytes(b"\xff\xd8")

@@ -39,7 +39,7 @@ Prioritized list of improvements based on analysis of foXaCe/ajax-security-hass,
 **Implementation:**
 1. Fire custom HA events from `notification.py` when push notifications arrive: `ajax_armed`, `ajax_disarmed`, `ajax_alarm`, `ajax_door_opened`, etc.
 2. Create `logbook.py` with `async_describe_events()` that maps events to human-readable descriptions with icons
-3. Parse the user name from the notification to show "Armed by Basilio" etc.
+3. Parse the user name from the notification to show "Armed by Carlos" etc.
 
 **Effort:** Medium (2-3 hours).
 
