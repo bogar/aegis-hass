@@ -1,0 +1,61 @@
+blueprint:
+  name: Ajax Security Event Notification
+  description: >-
+    Send a detailed notification on any Ajax security event, using enriched
+    event data (device_name, room_name, device_type). Optionally filter by
+    a specific event type.
+  domain: automation
+  input:
+    event_entity:
+      name: Security Event Entity
+      description: The Ajax security event entity to monitor.
+      selector:
+        entity:
+          filter:
+            domain: event
+    notify_service:
+      name: Notification Service
+      description: The notification service to call (e.g. notify.mobile_app_phone).
+      selector:
+        text: {}
+    event_type_filter:
+      name: Event Type Filter (optional)
+      description: >-
+        Leave empty to receive all events. Set to a specific event type
+        (alarm, tamper, arm, disarm, arm_night, disarm_night, panic,
+        battery_low, connection_lost, malfunction, fire, co_alarm, flood,
+        glass_break, motion, door_open) to filter.
+      default: ""
+      selector:
+        text: {}
+
+variables:
+  event_type_filter: !input event_type_filter
+
+triggers:
+  - trigger: state
+    entity_id: !input event_entity
+
+conditions:
+  - condition: template
+    value_template: >-
+      {{ trigger.to_state.attributes.event_type is defined }}
+  - condition: template
+    value_template: >-
+      {{ event_type_filter == '' or trigger.to_state.attributes.event_type == event_type_filter }}
+
+actions:
+  - action: !input notify_service
+    data:
+      title: >-
+        Security: {{ trigger.to_state.attributes.event_type | replace('_', ' ') | title }}
+      message: >-
+        {% set attrs = trigger.to_state.attributes %}
+        {{ attrs.get('device_name', 'Unknown device') }}
+        {% if attrs.get('room_name') %} ({{ attrs.room_name }}){% endif %}
+        — {{ attrs.event_type | replace('_', ' ') }}
+        {% if attrs.get('device_type') %} [{{ attrs.device_type | replace('_', ' ') | title }}]{% endif %}
+      data:
+        push:
+          sound: default
+        tag: "ajax-event-{{ trigger.to_state.attributes.event_type }}"

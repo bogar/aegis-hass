@@ -11,8 +11,8 @@
 # Adjust entity IDs if your HA slugifies device names differently.
 ###############################################################################
 
-title: Seguretat
-path: seguretat
+title: Security
+path: security
 icon: mdi:shield-home
 type: sections
 max_columns: 3
@@ -21,7 +21,7 @@ sections:
   # ═══════════════════════════════════════════════════════════════════════════
   # SECTION 1: Alarm Control + System Status
   # ═══════════════════════════════════════════════════════════════════════════
-  - title: Control Alarma
+  - title: Alarm Control
     cards:
       # ─── Main Alarm Panel ───
       - type: alarm-panel
@@ -33,7 +33,7 @@ sections:
 
       # ─── System Health at a Glance ───
       - type: entities
-        title: Estat del Sistema
+        title: System Status
         icon: mdi:server-network
         show_header_toggle: false
         entities:
@@ -41,19 +41,19 @@ sections:
             name: Hub Online
             icon: mdi:server-network
           - entity: binary_sensor.my_hub_cra_connection
-            name: CRA Monitoratge
+            name: CRA Monitoring
             icon: mdi:shield-check
           - entity: binary_sensor.my_hub_cellular_connected
-            name: Connexio Cellular
+            name: Cellular Connection
             icon: mdi:signal-4g
           - entity: sensor.my_hub_gsm_type
-            name: Tipus Connexio
+            name: Connection Type
             icon: mdi:cellphone-wireless
           - entity: sensor.my_hub_battery
-            name: Bateria Hub
+            name: Hub Battery
             icon: mdi:battery
           - entity: binary_sensor.my_hub_lid_opened
-            name: Tapa Hub
+            name: Hub Lid
             icon: mdi:box-shadow
           - entity: sensor.my_hub_imei
             name: IMEI
@@ -61,7 +61,7 @@ sections:
 
       # ─── Hub Network Status ───
       - type: entities
-        title: Xarxa del Hub
+        title: Hub Network
         icon: mdi:lan
         show_header_toggle: false
         entities:
@@ -84,74 +84,74 @@ sections:
             name: SSID
             icon: mdi:wifi-settings
           - entity: sensor.my_hub_wifi_signal_level
-            name: Senyal Wi-Fi
+            name: Wi-Fi Signal
             icon: mdi:wifi-strength-3
           - entity: binary_sensor.my_hub_mains_power
-            name: Alimentacio
+            name: Mains Power
             icon: mdi:power-plug
           - entity: sensor.my_hub_cellular_signal
-            name: Senyal Cel·lular
+            name: Cellular Signal
             icon: mdi:signal-cellular-3
           - entity: sensor.my_hub_cellular_network
-            name: Xarxa Cel·lular
+            name: Cellular Network
             icon: mdi:cellphone-wireless
           - entity: sensor.my_hub_connection_type
-            name: Connexio Primaria
+            name: Primary Connection
             icon: mdi:connection
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SECTION 2: Doors & Windows
   # ═══════════════════════════════════════════════════════════════════════════
-  - title: Portes i Finestres
+  - title: Doors & Windows
     cards:
       # ─── Door/Window Status Grid ───
       - type: glance
-        title: Estat Actual
+        title: Current Status
         show_state: true
         columns: 3
         entities:
           - entity: binary_sensor.main_door_door
-            name: Porta Principal
+            name: Main Door
             icon: mdi:door
           - entity: binary_sensor.kitchen_door_door
-            name: Porta Cuina
+            name: Kitchen Door
             icon: mdi:door
           - entity: binary_sensor.bedroom_door_door
-            name: Porta Hab
+            name: Bedroom Door
             icon: mdi:door
           - entity: binary_sensor.bedroom_window_door
-            name: Finestra Hab
+            name: Bedroom Window
             icon: mdi:window-closed-variant
           - entity: binary_sensor.bedroom2_window_door
-            name: Finestra Hab 2
+            name: Bedroom 2 Window
             icon: mdi:window-closed-variant
           - entity: binary_sensor.dressing_window_door
-            name: Finestra Vestidor
+            name: Dressing Window
             icon: mdi:window-closed-variant
 
       # ─── Batteries for Door/Window Sensors ───
       - type: glance
-        title: Bateries Sensors
+        title: Sensor Batteries
         show_state: true
         columns: 3
         entities:
           - entity: sensor.main_door_battery
-            name: Porta
+            name: Door
           - entity: sensor.kitchen_door_battery
-            name: P. Cuina
+            name: Kitchen
           - entity: sensor.bedroom_door_battery
-            name: P. Hab
+            name: Bedroom
           - entity: sensor.bedroom_window_battery
-            name: F. Hab
+            name: Bed. Win
           - entity: sensor.bedroom2_window_battery
-            name: F. Hab 2
+            name: Bed. 2 Win
           - entity: sensor.dressing_window_battery
-            name: F. Vestidor
+            name: Dress. Win
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SECTION 3: Cameras & Motion
   # ═══════════════════════════════════════════════════════════════════════════
-  - title: Cameres i Moviment
+  - title: Cameras & Motion
     cards:
       # ─── Camera Feeds ───
       - type: picture-entity
@@ -171,7 +171,7 @@ sections:
         cards:
           - type: button
             entity: button.hallway_capturar_foto
-            name: Foto Hallway
+            name: Photo Hallway
             icon: mdi:camera
             tap_action:
               action: call-service
@@ -182,7 +182,7 @@ sections:
 
           - type: button
             entity: button.dining_capturar_foto
-            name: Foto Living
+            name: Photo Living
             icon: mdi:camera
             tap_action:
               action: call-service
@@ -193,19 +193,19 @@ sections:
 
       # ─── Motion Sensor Details ───
       - type: entities
-        title: Detectors de Moviment
+        title: Motion Detectors
         show_header_toggle: false
         entities:
           - entity: binary_sensor.hallway_motion
             name: Hallway
             icon: mdi:motion-sensor
           - entity: sensor.hallway_battery
-            name: Bateria Hallway
+            name: Hallway Battery
           - entity: binary_sensor.dining_motion
             name: Living
             icon: mdi:motion-sensor
           - entity: sensor.dining_battery
-            name: Bateria Living
+            name: Living Battery
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SECTION 4: Temperatures
@@ -214,27 +214,27 @@ sections:
     cards:
       # ─── Temperature Glance ───
       - type: glance
-        title: Temperatura per Zona
+        title: Temperature by Zone
         show_state: true
         columns: 3
         entities:
           - entity: sensor.kitchen_door_temperature
-            name: Cuina
+            name: Kitchen
             icon: mdi:thermometer
           - entity: sensor.bedroom_door_temperature
-            name: Habitacio
+            name: Bedroom
             icon: mdi:thermometer
           - entity: sensor.main_door_temperature
-            name: Entrada
+            name: Entrance
             icon: mdi:thermometer
           - entity: sensor.bedroom_window_temperature
-            name: Hab (fin)
+            name: Bed. (win)
             icon: mdi:thermometer
           - entity: sensor.bedroom2_window_temperature
-            name: Hab 2 (fin)
+            name: Bed. 2 (win)
             icon: mdi:thermometer
           - entity: sensor.dressing_window_temperature
-            name: Vestidor
+            name: Dressing
             icon: mdi:thermometer
           - entity: sensor.hallway_temperature
             name: Hallway
@@ -243,20 +243,20 @@ sections:
             name: Living
             icon: mdi:thermometer
           - entity: sensor.keypad_temperature
-            name: Teclat
+            name: Keypad
             icon: mdi:thermometer
 
       # ─── Temperature History Graph ───
       - type: history-graph
-        title: Historial 24h
+        title: 24h History
         hours_to_show: 24
         entities:
           - entity: sensor.kitchen_door_temperature
-            name: Cuina
+            name: Kitchen
           - entity: sensor.bedroom_door_temperature
-            name: Habitacio
+            name: Bedroom
           - entity: sensor.main_door_temperature
-            name: Entrada
+            name: Entrance
           - entity: sensor.hallway_temperature
             name: Hallway
           - entity: sensor.dining_temperature
@@ -265,125 +265,125 @@ sections:
   # ═══════════════════════════════════════════════════════════════════════════
   # SECTION 5: Security Details & Diagnostics
   # ═══════════════════════════════════════════════════════════════════════════
-  - title: Seguretat i Diagnostics
+  - title: Security & Diagnostics
     cards:
       # ─── Tamper Status ───
       - type: entities
-        title: Estat Antimanipulacio
+        title: Tamper Status
         icon: mdi:shield-alert
         show_header_toggle: false
         entities:
           - entity: binary_sensor.main_door_tamper
-            name: Porta Principal
+            name: Main Door
           - entity: binary_sensor.kitchen_door_tamper
-            name: Porta Cuina
+            name: Kitchen Door
           - entity: binary_sensor.bedroom_door_tamper
-            name: Porta Hab
+            name: Bedroom Door
           - entity: binary_sensor.bedroom_window_tamper
-            name: Finestra Hab
+            name: Bedroom Window
           - entity: binary_sensor.bedroom2_window_tamper
-            name: Finestra Hab 2
+            name: Bedroom 2 Window
           - entity: binary_sensor.dressing_window_tamper
-            name: Finestra Vestidor
+            name: Dressing Window
           - entity: binary_sensor.hallway_tamper
             name: Hallway
           - entity: binary_sensor.dining_tamper
             name: Living
           - entity: binary_sensor.keypad_tamper
-            name: Teclat
+            name: Keypad
 
       # ─── Device Connectivity ───
       - type: entities
-        title: Connectivitat Dispositius
+        title: Device Connectivity
         icon: mdi:access-point-network
         show_header_toggle: false
         entities:
           - entity: binary_sensor.main_door_connectivity
-            name: Porta Principal
+            name: Main Door
           - entity: binary_sensor.kitchen_door_connectivity
-            name: Porta Cuina
+            name: Kitchen Door
           - entity: binary_sensor.bedroom_door_connectivity
-            name: Porta Hab
+            name: Bedroom Door
           - entity: binary_sensor.bedroom_window_connectivity
-            name: Finestra Hab
+            name: Bedroom Window
           - entity: binary_sensor.bedroom2_window_connectivity
-            name: Finestra Hab 2
+            name: Bedroom 2 Window
           - entity: binary_sensor.dressing_window_connectivity
-            name: Finestra Vestidor
+            name: Dressing Window
           - entity: binary_sensor.hallway_connectivity
             name: Hallway
           - entity: binary_sensor.dining_connectivity
             name: Living
           - entity: binary_sensor.keypad_connectivity
-            name: Teclat
+            name: Keypad
 
       # ─── Problems ───
       - type: entities
-        title: Problemes Actius
+        title: Active Problems
         icon: mdi:alert-circle
         show_header_toggle: false
         entities:
           - entity: binary_sensor.my_hub_problem
             name: Hub
           - entity: binary_sensor.main_door_problem
-            name: Porta Principal
+            name: Main Door
           - entity: binary_sensor.kitchen_door_problem
-            name: Porta Cuina
+            name: Kitchen Door
           - entity: binary_sensor.bedroom_door_problem
-            name: Porta Hab
+            name: Bedroom Door
           - entity: binary_sensor.bedroom_window_problem
-            name: Finestra Hab
+            name: Bedroom Window
           - entity: binary_sensor.bedroom2_window_problem
-            name: Finestra Hab 2
+            name: Bedroom 2 Window
           - entity: binary_sensor.dressing_window_problem
-            name: Finestra Vestidor
+            name: Dressing Window
           - entity: binary_sensor.hallway_problem
             name: Hallway
           - entity: binary_sensor.dining_problem
             name: Living
           - entity: binary_sensor.keypad_problem
-            name: Teclat
+            name: Keypad
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SECTION 6: Event History
   # ═══════════════════════════════════════════════════════════════════════════
-  - title: Historial
+  - title: History
     cards:
       # ─── Alarm State History ───
       - type: history-graph
-        title: Estat Alarma (48h)
+        title: Alarm State (48h)
         hours_to_show: 48
         entities:
           - entity: alarm_control_panel.my_hub
-            name: Alarma
+            name: Alarm
 
       # ─── Door Activity History ───
       - type: history-graph
-        title: Activitat Portes (24h)
+        title: Door Activity (24h)
         hours_to_show: 24
         entities:
           - entity: binary_sensor.main_door_door
-            name: Porta Principal
+            name: Main Door
           - entity: binary_sensor.kitchen_door_door
-            name: Cuina
+            name: Kitchen
           - entity: binary_sensor.bedroom_door_door
-            name: Habitacio
+            name: Bedroom
 
       # ─── Window Activity History ───
       - type: history-graph
-        title: Activitat Finestres (24h)
+        title: Window Activity (24h)
         hours_to_show: 24
         entities:
           - entity: binary_sensor.bedroom_window_door
-            name: Finestra Hab
+            name: Bedroom Window
           - entity: binary_sensor.bedroom2_window_door
-            name: Finestra Hab 2
+            name: Bedroom 2 Window
           - entity: binary_sensor.dressing_window_door
-            name: Finestra Vestidor
+            name: Dressing Window
 
       # ─── Motion History ───
       - type: history-graph
-        title: Moviment Detectat (24h)
+        title: Motion Detected (24h)
         hours_to_show: 24
         entities:
           - entity: binary_sensor.hallway_motion
@@ -393,7 +393,7 @@ sections:
 
       # ─── Hub Connectivity History ───
       - type: history-graph
-        title: Connectivitat Hub (7d)
+        title: Hub Connectivity (7d)
         hours_to_show: 168
         entities:
           - entity: binary_sensor.my_hub_connectivity
@@ -407,4 +407,4 @@ sections:
           - entity: binary_sensor.my_hub_wifi_connected
             name: Wi-Fi
           - entity: binary_sensor.my_hub_mains_power
-            name: Alimentacio
+            name: Mains Power

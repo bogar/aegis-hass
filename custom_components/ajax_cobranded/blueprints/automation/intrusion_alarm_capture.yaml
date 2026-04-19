@@ -1,0 +1,83 @@
+blueprint:
+  name: Ajax Intrusion Alarm — Capture & Notify
+  description: >-
+    When an intrusion alarm fires on the Ajax security event entity,
+    capture photos from configured cameras and send a critical notification
+    with the device name that triggered the alarm.
+  domain: automation
+  input:
+    event_entity:
+      name: Security Event Entity
+      description: The Ajax security event entity to monitor.
+      selector:
+        entity:
+          filter:
+            domain: event
+    notify_service:
+      name: Notification Service
+      description: The notification service to call (e.g. notify.mobile_app_phone).
+      selector:
+        text: {}
+    camera_buttons:
+      name: Camera Capture Buttons
+      description: >-
+        List of button entities that trigger photo capture on your cameras
+        (e.g. button.hallway_capture_photo).
+      selector:
+        entity:
+          filter:
+            domain: button
+          multiple: true
+    notification_title:
+      name: Notification Title
+      description: Custom title for the notification.
+      default: "INTRUSION ALARM"
+      selector:
+        text: {}
+    notification_message:
+      name: Custom Message Prefix (optional)
+      description: >-
+        Optional prefix for the notification message. The device name will
+        be appended automatically. Leave empty for the default message.
+      default: ""
+      selector:
+        text: {}
+
+variables:
+  custom_message: !input notification_message
+
+triggers:
+  - trigger: state
+    entity_id: !input event_entity
+
+conditions:
+  - condition: template
+    value_template: >-
+      {{ trigger.to_state.attributes.event_type is defined
+         and trigger.to_state.attributes.event_type == 'alarm' }}
+
+actions:
+  - parallel:
+      - action: button.press
+        target:
+          entity_id: !input camera_buttons
+      - action: !input notify_service
+        data:
+          title: !input notification_title
+          message: >-
+            {% set device = trigger.to_state.attributes.get('device_name', 'unknown device') %}
+            {% set room = trigger.to_state.attributes.get('room_name', '') %}
+            {% if custom_message != '' %}
+            {{ custom_message }} — {{ device }}{% if room %} in {{ room }}{% endif %}
+            {% else %}
+            Alarm triggered by {{ device }}{% if room %} in {{ room }}{% endif %}. Photos captured.
+            {% endif %}
+          data:
+            push:
+              sound:
+                name: default
+                critical: 1
+                volume: 1.0
+            tag: ajax-intrusion-alarm
+            priority: high
+            ttl: 0
