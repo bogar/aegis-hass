@@ -135,6 +135,58 @@ class TestAsyncSetupEntry:
         mock_client.session.set_session.assert_not_called()
 
 
+class TestOptionsUpdateListener:
+    @pytest.mark.asyncio
+    async def test_options_change_triggers_reload(self) -> None:
+        from custom_components.ajax_cobranded import _async_options_update_listener
+
+        hass = MagicMock()
+        hass.config_entries.async_reload = AsyncMock()
+
+        entry = MagicMock()
+        entry.entry_id = "entry-1"
+
+        await _async_options_update_listener(hass, entry)
+
+        hass.config_entries.async_reload.assert_awaited_once_with("entry-1")
+
+    @pytest.mark.asyncio
+    async def test_setup_registers_update_listener(self) -> None:
+        from custom_components.ajax_cobranded import async_setup_entry
+
+        hass = MagicMock()
+        hass.data = {}
+        hass.config_entries.async_forward_entry_setups = AsyncMock(return_value=True)
+
+        entry = MagicMock()
+        entry.entry_id = "entry-1"
+        entry.data = {
+            "email": "test@example.com",
+            "password_hash": "abc123hash",
+            "spaces": ["s1"],
+        }
+        entry.options = {}
+
+        mock_client = MagicMock()
+        mock_client.connect = AsyncMock()
+        mock_client.session = MagicMock()
+
+        mock_coordinator = MagicMock()
+        mock_coordinator.async_config_entry_first_refresh = AsyncMock()
+        mock_coordinator.async_start_push_notifications = AsyncMock()
+
+        with (
+            patch("custom_components.ajax_cobranded.AjaxGrpcClient", return_value=mock_client),
+            patch(
+                "custom_components.ajax_cobranded.AjaxCobrandedCoordinator",
+                return_value=mock_coordinator,
+            ),
+        ):
+            await async_setup_entry(hass, entry)
+
+        entry.add_update_listener.assert_called_once()
+
+
 class TestAsyncUnloadEntry:
     @pytest.mark.asyncio
     async def test_unload_entry_success(self) -> None:

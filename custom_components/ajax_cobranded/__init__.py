@@ -133,7 +133,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: AjaxCobrandedConfigEntry
         hass.services.async_register(DOMAIN, "force_arm", _force_arm_handler)
         hass.services.async_register(DOMAIN, "force_arm_night", _force_arm_night_handler)
 
+    # Reload integration when options change (e.g. FCM credentials)
+    entry.async_on_unload(entry.add_update_listener(_async_options_update_listener))
+
     return True
+
+
+async def _async_options_update_listener(
+    hass: HomeAssistant, entry: AjaxCobrandedConfigEntry
+) -> None:
+    """Reload integration when options are updated."""
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: AjaxCobrandedConfigEntry) -> bool:
