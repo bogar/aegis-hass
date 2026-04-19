@@ -4,57 +4,22 @@ Prioritized list of improvements based on analysis of foXaCe/ajax-security-hass,
 
 ## Priority 1 — High impact, moderate effort
 
-### 1.1 Event Platform (`event.py`)
-**Why:** Without events, users can't trigger automations from button presses, doorbell rings, or detection events via the HA automation UI. This is the single biggest feature gap.
+### 1.1 ~~Event Platform (`event.py`)~~ ✅ DONE (v0.5.0 + v0.9.0)
+Implemented with 16 event types and enriched device source info (device_name, device_id, device_type, room_name).
 
-**Entities:**
-- SpaceControl keyfob: `single_press`, `double_press`, `long_press`, `panic`
-- KeyPad: `arm`, `disarm`, `panic`, `emergency`
-- Doorbell: `ring`
-- MotionCam AI: `motion`, `human`, `vehicle`, `pet` (if VideoEdge available)
+### 1.2 ~~Force Arm Services~~ ✅ DONE (v0.5.0)
+`ajax_cobranded.force_arm` and `ajax_cobranded.force_arm_night` services available.
 
-**Data source:** FCM push notifications (`ENCODED_DATA` → `PushNotificationDispatchEvent.notification` → `HubEventTag`). Parse the event tag and qualifier from the notification proto to determine event type and source device.
+### 1.3 ~~Logbook Integration (`logbook.py`)~~ ✅ DONE (v0.5.0)
+Human-readable event descriptions with icons in the HA logbook.
 
-**Implementation:**
-1. Add `Platform.EVENT` to PLATFORMS
-2. Create `event.py` with `AjaxSecurityEvent` entity per device that supports events
-3. In `notification.py`, parse `HubEventTag` from ENCODED_DATA and fire events via `hass.bus.async_fire()`
-4. Register event types in entity descriptions
-
-**Effort:** Medium (3-4 hours). Requires parsing the notification proto properly.
-
-### 1.2 Force Arm Services
-**Why:** Real-world scenario: you want to arm but a window is open. The app handles this with "ignore problems" — we need the same.
-
-**Implementation:**
-1. Register custom services `ajax_cobranded.force_arm` and `ajax_cobranded.force_arm_night` in `services.yaml`
-2. These call `SecurityApi.arm(space_id, ignore_alarms=True)` which already exists
-3. Register handlers in `__init__.py`
-
-**Effort:** Low (1 hour). The API already supports `ignore_alarms=True`.
-
-### 1.3 Logbook Integration (`logbook.py`)
-**Why:** Clean timeline of security events (who armed, when a door opened, which sensor triggered).
-
-**Implementation:**
-1. Fire custom HA events from `notification.py` when push notifications arrive: `ajax_armed`, `ajax_disarmed`, `ajax_alarm`, `ajax_door_opened`, etc.
-2. Create `logbook.py` with `async_describe_events()` that maps events to human-readable descriptions with icons
-3. Parse the user name from the notification to show "Armed by Carlos" etc.
-
-**Effort:** Medium (2-3 hours).
-
-### 1.4 Missing Binary Sensors
-**Why:** foXaCe has specific sensors for glass_break, shock, tilt, steam that we map to generic tamper.
-
-**Sensors to add:**
-- `glass_break` — GlassProtect devices (currently only tamper)
-- `shock` / `vibration` — DoorProtect Plus (accelerometer alarm events)
+### 1.4 Missing Binary Sensors (partially done)
+**Done:** glass_break, vibration, external_contact
+**Remaining:**
 - `tilt` — DoorProtect Plus (accelerometer tilt detection)
 - `steam` — FireProtect 2 (steam detection)
 
-**Data source:** These come as StatusUpdate in the gRPC stream (fields we already parse but don't expose as dedicated entities) or as alarm events via FCM push.
-
-**Effort:** Low (1-2 hours). Mostly mapping new status fields to binary sensor types.
+**Effort:** Low (1 hour).
 
 ---
 
@@ -93,14 +58,8 @@ Prioritized list of improvements based on analysis of foXaCe/ajax-security-hass,
 
 **Effort:** Medium (3 hours). Need to parse firmware proto fields.
 
-### 2.4 icons.json
-**Why:** Better visual consistency with proper MDI icons per entity type.
-
-**Implementation:**
-1. Create `icons.json` mapping entity types to MDI icons
-2. Door: `mdi:door`, Motion: `mdi:motion-sensor`, Smoke: `mdi:smoke-detector`, etc.
-
-**Effort:** Low (30 minutes).
+### 2.4 ~~icons.json~~ ✅ DONE (v0.5.0)
+MDI icons for all entity types.
 
 ### 2.5 DHCP Discovery
 **Why:** Automatic hub detection on the local network without manual setup.
@@ -168,8 +127,6 @@ Prioritized list of improvements based on analysis of foXaCe/ajax-security-hass,
 
 These are protocol-level limitations that cannot be resolved by emulating the mobile app:
 
-- **Hub ethernet/WiFi details** (IP, mask, gateway, DNS) — only available via HTS internal channel
-- **Hub external power status** — only via HTS
 - **Hub tamper (lid) real state** — the `lid_opened` status exists in the proto but the server doesn't send it in `StreamLightDevices` for the hub
 - **Photo on-demand URL retrieval** — v2 capture works but the photo URL only arrives via the v3 detection area stream, which returns `permission_denied` for our sessions
 - **SpaceControl keyfob listing** — keyfobs don't appear in `StreamLightDevices` (they may appear in a different device list API)

@@ -59,6 +59,46 @@ sections:
             name: IMEI
             icon: mdi:sim
 
+      # ─── Hub Network Status ───
+      - type: entities
+        title: Xarxa del Hub
+        icon: mdi:lan
+        show_header_toggle: false
+        entities:
+          - entity: binary_sensor.my_hub_ethernet
+            name: Ethernet
+            icon: mdi:ethernet
+          - entity: sensor.my_hub_ethernet_ip
+            name: IP Ethernet
+            icon: mdi:ip-network
+          - entity: sensor.my_hub_ethernet_gateway
+            name: Gateway
+            icon: mdi:router-network
+          - entity: sensor.my_hub_ethernet_dns
+            name: DNS
+            icon: mdi:dns
+          - entity: binary_sensor.my_hub_wifi_connected
+            name: Wi-Fi
+            icon: mdi:wifi
+          - entity: sensor.my_hub_wifi_ssid
+            name: SSID
+            icon: mdi:wifi-settings
+          - entity: sensor.my_hub_wifi_signal_level
+            name: Senyal Wi-Fi
+            icon: mdi:wifi-strength-3
+          - entity: binary_sensor.my_hub_mains_power
+            name: Alimentacio
+            icon: mdi:power-plug
+          - entity: sensor.my_hub_cellular_signal
+            name: Senyal Cel·lular
+            icon: mdi:signal-cellular-3
+          - entity: sensor.my_hub_cellular_network
+            name: Xarxa Cel·lular
+            icon: mdi:cellphone-wireless
+          - entity: sensor.my_hub_connection_type
+            name: Connexio Primaria
+            icon: mdi:connection
+
   # ═══════════════════════════════════════════════════════════════════════════
   # SECTION 2: Doors & Windows
   # ═══════════════════════════════════════════════════════════════════════════
@@ -362,3 +402,9 @@ sections:
             name: CRA
           - entity: binary_sensor.my_hub_cellular_connected
             name: Cellular
+          - entity: binary_sensor.my_hub_ethernet
+            name: Ethernet
+          - entity: binary_sensor.my_hub_wifi_connected
+            name: Wi-Fi
+          - entity: binary_sensor.my_hub_mains_power
+            name: Alimentacio
