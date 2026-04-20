@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-04-21
+
+### Changed
+- **BREAKING**: Rebranded to **Aegis for Ajax** — domain renamed from `ajax_cobranded` to `aegis_ajax`. Users must remove and re-add the integration after updating.
+- All UI strings updated to Aegis branding across 14 languages
+- Repository renamed to `bvis/aegis-hass`
+- Services renamed: `aegis_ajax.force_arm`, `aegis_ajax.force_arm_night`
+
+### Added
+- Automation blueprints: door opened while armed (preventive alert), remind to arm with TTS voice announcement
+- Updated nobody-home-remind-arm blueprint with optional TTS support
+
 ## [0.10.0] - 2026-04-19
 
 ### Added
