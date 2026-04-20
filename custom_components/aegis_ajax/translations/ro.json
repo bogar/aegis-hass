@@ -2,8 +2,8 @@
     "config": {
         "step": {
             "user": {
-                "title": "Autentificare Ajax Security",
-                "description": "Introduceți datele de autentificare ale contului Ajax Security.",
+                "title": "Autentificare Aegis for Ajax",
+                "description": "Introduceți datele de autentificare ale contului Aegis for Ajax.",
                 "data": {
                     "email": "E-mail",
                     "password": "Parolă",
@@ -21,7 +21,7 @@
                 "data": {"spaces": "Spații"}
             },
             "reconfigure": {
-                "title": "Reconfigurare Ajax Security",
+                "title": "Reconfigurare Aegis for Ajax",
                 "description": "Actualizați datele de autentificare.",
                 "data": {
                     "email": "E-mail",
@@ -47,7 +47,7 @@
     "options": {
         "step": {
             "init": {
-                "title": "Opțiuni Ajax Security",
+                "title": "Opțiuni Aegis for Ajax",
                 "data": {
                     "poll_interval": "Interval de interogare de rezervă (secunde)",
                     "use_pin_code": "Necesită cod PIN pentru armare/dezarmare",

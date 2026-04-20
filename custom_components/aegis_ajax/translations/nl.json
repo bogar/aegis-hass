@@ -2,8 +2,8 @@
     "config": {
         "step": {
             "user": {
-                "title": "Ajax Security Aanmelden",
-                "description": "Voer de inloggegevens van uw Ajax Security-account in.",
+                "title": "Aegis for Ajax Aanmelden",
+                "description": "Voer de inloggegevens van uw Aegis for Ajax-account in.",
                 "data": {
                     "email": "E-mailadres",
                     "password": "Wachtwoord",
@@ -21,7 +21,7 @@
                 "data": {"spaces": "Ruimtes"}
             },
             "reconfigure": {
-                "title": "Ajax Security herconfigureren",
+                "title": "Aegis for Ajax herconfigureren",
                 "description": "Werk uw accountgegevens bij.",
                 "data": {"email": "E-mail", "password": "Wachtwoord", "app_label": "App-label"}
             }
@@ -43,7 +43,7 @@
     "options": {
         "step": {
             "init": {
-                "title": "Ajax Security Instellingen",
+                "title": "Aegis for Ajax Instellingen",
                 "data": {
                     "poll_interval": "Reserve-pollinginterval (seconden)",
                     "use_pin_code": "PIN-code vereisen voor in-/uitschakelen",

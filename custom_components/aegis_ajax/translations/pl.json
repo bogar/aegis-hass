@@ -2,8 +2,8 @@
     "config": {
         "step": {
             "user": {
-                "title": "Logowanie Ajax Security",
-                "description": "Wprowadź dane logowania do konta Ajax Security.",
+                "title": "Logowanie Aegis for Ajax",
+                "description": "Wprowadź dane logowania do konta Aegis for Ajax.",
                 "data": {
                     "email": "Adres e-mail",
                     "password": "Hasło",
@@ -21,7 +21,7 @@
                 "data": {"spaces": "Przestrzenie"}
             },
             "reconfigure": {
-                "title": "Rekonfiguracja Ajax Security",
+                "title": "Rekonfiguracja Aegis for Ajax",
                 "description": "Zaktualizuj dane logowania.",
                 "data": {"email": "E-mail", "password": "Hasło", "app_label": "Etykieta aplikacji"}
             }
@@ -43,7 +43,7 @@
     "options": {
         "step": {
             "init": {
-                "title": "Opcje Ajax Security",
+                "title": "Opcje Aegis for Ajax",
                 "data": {
                     "poll_interval": "Zapasowy interwał odpytywania (sekundy)",
                     "use_pin_code": "Wymagaj kodu PIN do uzbrojenia/rozbrojenia",

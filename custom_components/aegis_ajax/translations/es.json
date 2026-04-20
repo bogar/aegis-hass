@@ -2,8 +2,8 @@
     "config": {
         "step": {
             "user": {
-                "title": "Inicio de sesion Ajax Security",
-                "description": "Introduce las credenciales de tu cuenta Ajax Security.",
+                "title": "Inicio de sesion Aegis for Ajax",
+                "description": "Introduce las credenciales de tu cuenta Aegis for Ajax.",
                 "data": {
                     "email": "Correo electronico",
                     "password": "Contrasena",
@@ -21,7 +21,7 @@
                 "data": {"spaces": "Espacios"}
             },
             "reconfigure": {
-                "title": "Reconfigurar Ajax Security",
+                "title": "Reconfigurar Aegis for Ajax",
                 "description": "Actualiza las credenciales de la cuenta.",
                 "data": {
                     "email": "Correo electrónico",
@@ -47,7 +47,7 @@
     "options": {
         "step": {
             "init": {
-                "title": "Opciones de Ajax Security",
+                "title": "Opciones de Aegis for Ajax",
                 "data": {
                     "poll_interval": "Intervalo de sondeo de reserva (segundos)",
                     "use_pin_code": "Requerir codigo PIN para armar/desarmar",

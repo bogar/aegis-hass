@@ -2,8 +2,8 @@
     "config": {
         "step": {
             "user": {
-                "title": "Вхід до Ajax Security",
-                "description": "Введіть облікові дані вашого акаунту Ajax Security.",
+                "title": "Вхід до Aegis for Ajax",
+                "description": "Введіть облікові дані вашого акаунту Aegis for Ajax.",
                 "data": {
                     "email": "Електронна пошта",
                     "password": "Пароль",
@@ -21,7 +21,7 @@
                 "data": {"spaces": "Простори"}
             },
             "reconfigure": {
-                "title": "Переналаштувати Ajax Security",
+                "title": "Переналаштувати Aegis for Ajax",
                 "description": "Оновіть облікові дані.",
                 "data": {"email": "E-mail", "password": "Пароль", "app_label": "Мітка додатку"}
             }
@@ -43,7 +43,7 @@
     "options": {
         "step": {
             "init": {
-                "title": "Налаштування Ajax Security",
+                "title": "Налаштування Aegis for Ajax",
                 "data": {
                     "poll_interval": "Резервний інтервал опитування (секунди)",
                     "use_pin_code": "Вимагати PIN-код для постановки/зняття з охорони",

@@ -2,8 +2,8 @@
     "config": {
         "step": {
             "user": {
-                "title": "Přihlášení Ajax Security",
-                "description": "Zadejte přihlašovací údaje svého účtu Ajax Security.",
+                "title": "Přihlášení Aegis for Ajax",
+                "description": "Zadejte přihlašovací údaje svého účtu Aegis for Ajax.",
                 "data": {
                     "email": "E-mail",
                     "password": "Heslo",
@@ -21,7 +21,7 @@
                 "data": {"spaces": "Prostory"}
             },
             "reconfigure": {
-                "title": "Překonfigurovat Ajax Security",
+                "title": "Překonfigurovat Aegis for Ajax",
                 "description": "Aktualizujte přihlašovací údaje.",
                 "data": {"email": "E-mail", "password": "Heslo", "app_label": "Štítek aplikace"}
             }
@@ -43,7 +43,7 @@
     "options": {
         "step": {
             "init": {
-                "title": "Nastavení Ajax Security",
+                "title": "Nastavení Aegis for Ajax",
                 "data": {
                     "poll_interval": "Záložní interval dotazování (sekundy)",
                     "use_pin_code": "Vyžadovat PIN kód pro střežení/odstřežení",

@@ -2,8 +2,8 @@
     "config": {
         "step": {
             "user": {
-                "title": "Ajax Security Login",
-                "description": "Enter your Ajax Security account credentials.",
+                "title": "Aegis for Ajax — Login",
+                "description": "Enter your Ajax account credentials.",
                 "data": {
                     "email": "Email",
                     "password": "Password",
@@ -21,7 +21,7 @@
                 "data": {"spaces": "Spaces"}
             },
             "reconfigure": {
-                "title": "Reconfigure Ajax Security",
+                "title": "Reconfigure Aegis for Ajax",
                 "description": "Update your account credentials.",
                 "data": {
                     "email": "Email",
@@ -47,7 +47,7 @@
     "options": {
         "step": {
             "init": {
-                "title": "Ajax Security Options",
+                "title": "Aegis for Ajax — Options",
                 "data": {
                     "poll_interval": "Fallback poll interval (seconds)",
                     "use_pin_code": "Require PIN code for arm/disarm",

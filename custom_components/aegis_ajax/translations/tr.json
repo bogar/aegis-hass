@@ -2,8 +2,8 @@
     "config": {
         "step": {
             "user": {
-                "title": "Ajax Security Girişi",
-                "description": "Ajax Security hesabınızın kimlik bilgilerini girin.",
+                "title": "Aegis for Ajax — Giriş",
+                "description": "Ajax hesabınızın kimlik bilgilerini girin.",
                 "data": {
                     "email": "E-posta",
                     "password": "Parola",
@@ -21,7 +21,7 @@
                 "data": {"spaces": "Alanlar"}
             },
             "reconfigure": {
-                "title": "Ajax Security'yi yeniden yapılandır",
+                "title": "Aegis for Ajax — Yeniden yapılandır",
                 "description": "Hesap kimlik bilgilerinizi güncelleyin.",
                 "data": {"email": "E-posta", "password": "Şifre", "app_label": "Uygulama etiketi"}
             }
@@ -43,7 +43,7 @@
     "options": {
         "step": {
             "init": {
-                "title": "Ajax Security Seçenekleri",
+                "title": "Aegis for Ajax — Seçenekler",
                 "data": {
                     "poll_interval": "Yedek yoklama aralığı (saniye)",
                     "use_pin_code": "Kurma/devre dışı bırakma için PIN kodu gerektir",
