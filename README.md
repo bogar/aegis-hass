@@ -30,6 +30,7 @@ Ajax Systems provides co-branded versions of their mobile app to security compan
 - **Push notifications**: FCM integration for immediate event delivery
 - **2FA support** (TOTP)
 - **MDI icons** for all entity types
+- **Automation Blueprints**: Ready-to-use automation templates (see below)
 
 ## Requirements
 
@@ -200,6 +201,23 @@ Use these in automation templates, e.g. `{{ trigger.event.data.device_name }}`.
 - **Glass break** — glass break detection (GlassProtect, CombiProtect)
 - **Vibration** — vibration/shock detection (DoorProtect Plus)
 - **External contact** — wired zone status (DoorProtect Plus)
+
+## Automation Blueprints
+
+Aegis includes 8 ready-to-use automation blueprints. Import them via URL in **Settings → Automations → Blueprints → Import Blueprint**:
+
+| Blueprint | Description | Import URL |
+|-----------|-------------|------------|
+| **Security Event Notification** | Detailed push notification on any security event with device name and room | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/security_event_notification.yaml) |
+| **Intrusion Alarm + Capture** | Capture all cameras and send critical notification when intrusion alarm fires | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/intrusion_alarm_capture.yaml) |
+| **Tamper Alert** | Critical notification when device tampering is detected | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/tamper_alert.yaml) |
+| **Door Opened While Armed** | Preventive alert when a door opens with the alarm armed, with optional warning script | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/door_opened_while_armed.yaml) |
+| **Nobody Home Remind Arm** | Notification when nobody is home and the alarm is disarmed, with optional TTS | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/nobody_home_remind_arm.yaml) |
+| **Remind Arm with TTS** | Push + voice announcement when someone is home and alarm is disarmed | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/remind_arm_with_tts.yaml) |
+| **Low Battery Weekly** | Weekly summary of devices with battery below threshold | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/low_battery_weekly.yaml) |
+| **Connectivity Loss Escalation** | Progressive alerts on hub connectivity loss (warning → critical → restored) | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/connectivity_loss_escalation.yaml) |
+
+You can also manually copy the blueprint files from `custom_components/aegis_ajax/blueprints/automation/` to your `config/blueprints/automation/aegis_ajax/` directory.
 
 ## Troubleshooting
 
