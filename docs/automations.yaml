@@ -1,5 +1,5 @@
 ###############################################################################
-# Ajax Security System — Home Assistant Automations
+# Aegis for Ajax — Home Assistant Automations
 #
 # Entity naming convention (based on aegis_ajax integration):
 #   alarm_control_panel.my_hub

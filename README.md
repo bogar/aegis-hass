@@ -66,7 +66,7 @@ Ajax Systems provides co-branded versions of their mobile app to security compan
 
 ### Options
 
-After setup, configure these in **Settings > Devices & Services > Ajax Security > Configure**:
+After setup, configure these in **Settings > Devices & Services > Aegis for Ajax > Configure**:
 
 | Option | Default | Description |
 |---|---|---|
@@ -144,7 +144,7 @@ MotionCam **PhOD** (Photo on Demand) models support capturing photos remotely:
 1. Press the **"Capture photo"** button entity in HA
 2. The hub triggers the camera, and the photo URL is retrieved via the Ajax notification system
 3. The photo is downloaded, a **timestamp overlay** is burned into the image, and it's saved to `/media/ajax_photos/{device_name}/`
-4. View photos in the camera entity or browse all captures via **Media Browser → Ajax Security Photos**
+4. View photos in the camera entity or browse all captures via **Media Browser → Aegis Security Photos**
 
 > **Note**: Regular MotionCam models (without PhOD) do not support on-demand photo capture. The button entity is only created for PhOD models.
 
