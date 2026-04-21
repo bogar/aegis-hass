@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-04-21
+
+### Fixed
+- Enforce minimum poll interval (60s) to prevent excessive API requests
+
+### Added
+- README badges (HACS, release, tests, license, code style)
+- One-click HACS install and "Add Integration" buttons in README
+- MIT LICENSE file
+- SECURITY.md with responsible disclosure instructions
+- CI coverage summary rendered in GitHub job summary
+
 ## [1.0.0] - 2026-04-21
 
 ### Changed
