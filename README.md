@@ -1,5 +1,11 @@
 # Aegis for Ajax — Home Assistant Integration
 
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![GitHub Release](https://img.shields.io/github/release/bvis/aegis-hass.svg)](https://github.com/bvis/aegis-hass/releases)
+[![Tests](https://github.com/bvis/aegis-hass/actions/workflows/ci.yml/badge.svg)](https://github.com/bvis/aegis-hass/actions)
+[![License: MIT](https://img.shields.io/github/license/bvis/aegis-hass.svg)](LICENSE)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+
 > **Disclaimer**: This is an **unofficial** third-party integration and is not affiliated with, endorsed by, or supported by Ajax Systems. Use at your own risk. This integration communicates with Ajax Systems servers using the same protocol as the official mobile app. Ajax Systems may change their API at any time, which could break this integration without notice.
 
 **Aegis** is a Home Assistant custom integration for **Ajax Security Systems** — works with any co-branded Ajax app (Protegim, ADT, G4S, and many more).
@@ -43,12 +49,18 @@ Ajax Systems provides co-branded versions of their mobile app to security compan
 
 ### HACS (Recommended)
 
+[![Open HACS Repository](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=bvis&repository=aegis-hass&category=integration)
+
+Click the button above, or manually:
+
 1. Open HACS in Home Assistant
 2. Click the three dots menu (top right) and select **Custom repositories**
 3. Add `https://github.com/bvis/aegis-hass` with category **Integration**
 4. Search for "Aegis for Ajax" in HACS and click **Install**
 5. Restart Home Assistant
-6. Go to **Settings > Devices & Services > Add Integration** and search for "Aegis for Ajax"
+6. Add the integration:
+
+[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=aegis_ajax)
 
 ### Manual
 
