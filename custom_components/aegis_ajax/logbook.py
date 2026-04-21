@@ -1,70 +1,61 @@
-"""Logbook descriptions for Ajax Security events."""
+"""Logbook descriptions for Aegis for Ajax security events."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from homeassistant.core import callback
+from homeassistant.components.logbook import LOGBOOK_ENTRY_MESSAGE, LOGBOOK_ENTRY_NAME
+from homeassistant.core import Event, callback
+
+from custom_components.aegis_ajax.const import DOMAIN
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from homeassistant.core import HomeAssistant
 
 _EVENT_DESCRIPTIONS: dict[str, str] = {
-    "alarm": "Alarm: {device_name}",
-    "arm": "Armed by {user_name}",
-    "arm_night": "Armed night by {user_name}",
+    "alarm": "Alarm triggered: {device_name}",
+    "arm": "Armed by {device_name}",
+    "arm_night": "Night mode armed by {device_name}",
     "battery_low": "Battery low: {device_name}",
     "co_alarm": "CO alarm: {device_name}",
     "connection_lost": "Connection lost: {device_name}",
-    "disarm": "Disarmed by {user_name}",
-    "disarm_night": "Disarmed night by {user_name}",
-    "door_open": "Opened: {device_name}",
-    "fire": "Fire: {device_name}",
-    "flood": "Flood: {device_name}",
+    "disarm": "Disarmed by {device_name}",
+    "disarm_night": "Night mode disarmed by {device_name}",
+    "door_open": "Door opened: {device_name}",
+    "fire": "Fire detected: {device_name}",
+    "flood": "Flood detected: {device_name}",
     "glass_break": "Glass break: {device_name}",
     "malfunction": "Malfunction: {device_name}",
-    "motion": "Motion: {device_name}",
+    "motion": "Motion detected: {device_name}",
     "panic": "Panic: {device_name}",
     "tamper": "Tamper: {device_name}",
-}
-
-_EVENT_ICONS: dict[str, str] = {
-    "alarm": "mdi:shield-alert",
-    "arm": "mdi:shield-lock",
-    "arm_night": "mdi:shield-moon",
-    "battery_low": "mdi:battery-low",
-    "co_alarm": "mdi:molecule-co",
-    "connection_lost": "mdi:wifi-off",
-    "disarm": "mdi:shield-off",
-    "disarm_night": "mdi:shield-off",
-    "door_open": "mdi:door-open",
-    "fire": "mdi:fire",
-    "flood": "mdi:water-alert",
-    "glass_break": "mdi:window-shutter-alert",
-    "malfunction": "mdi:alert-circle",
-    "motion": "mdi:motion-sensor",
-    "panic": "mdi:alert-octagon",
-    "tamper": "mdi:alert",
 }
 
 
 @callback
 def async_describe_events(
     hass: HomeAssistant,  # noqa: ARG001
-    async_describe_event: object,  # noqa: ARG001
+    async_describe_event: Callable[[str, str, Callable[[Event], dict[str, str]]], None],
 ) -> None:
-    """Describe logbook events (HA platform hook)."""
-    # No custom logbook event descriptions registered at this time.
-    # This function exists to satisfy HA's logbook platform auto-discovery.
+    """Register logbook event descriptions for Aegis security events."""
 
+    @callback
+    def async_describe_aegis_event(event: Event) -> dict[str, str]:
+        data: dict[str, Any] = event.data
+        event_type = data.get("event_type", "unknown")
+        device_name = data.get("device_name", "Unknown device")
+        room_name = data.get("room_name")
 
-def describe_event(event_type: str, data: dict[str, Any]) -> dict[str, str]:
-    """Return a logbook description for an Ajax security event."""
-    template = _EVENT_DESCRIPTIONS.get(event_type, f"Security event: {event_type}")
-    device_name = data.get("device_name", "Unknown device")
-    user_name = data.get("user_name", "Unknown user")
+        template = _EVENT_DESCRIPTIONS.get(event_type, "Security event: {device_name}")
+        message = template.format(device_name=device_name)
+        if room_name:
+            message += f" ({room_name})"
 
-    message = template.format(device_name=device_name, user_name=user_name)
-    icon = _EVENT_ICONS.get(event_type, "mdi:shield-home")
+        return {
+            LOGBOOK_ENTRY_NAME: "Aegis",
+            LOGBOOK_ENTRY_MESSAGE: message,
+        }
 
-    return {"name": "Ajax Security", "message": message, "icon": icon}
+    async_describe_event(DOMAIN, f"{DOMAIN}_event", async_describe_aegis_event)

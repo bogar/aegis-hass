@@ -36,6 +36,7 @@ class TestAjaxSecurityEvent:
         entity = self._make_event_entity()
         entity._trigger_event = MagicMock()
         entity.async_write_ha_state = MagicMock()
+        entity.hass = MagicMock()
 
         entity.handle_event("alarm", {"raw_tag": "intrusion_alarm", "transition": "triggered"})
 
@@ -43,11 +44,13 @@ class TestAjaxSecurityEvent:
             "alarm", {"raw_tag": "intrusion_alarm", "transition": "triggered"}
         )
         entity.async_write_ha_state.assert_called_once()
+        entity.hass.bus.async_fire.assert_called_once()
 
     def test_handle_event_with_source_info(self) -> None:
         entity = self._make_event_entity()
         entity._trigger_event = MagicMock()
         entity.async_write_ha_state = MagicMock()
+        entity.hass = MagicMock()
 
         data = {
             "raw_tag": "door_opened",
@@ -61,6 +64,11 @@ class TestAjaxSecurityEvent:
 
         entity._trigger_event.assert_called_once_with("door_open", data)
         entity.async_write_ha_state.assert_called_once()
+        # Verify bus event fired with correct data
+        fire_call = entity.hass.bus.async_fire.call_args
+        assert fire_call[0][0] == "aegis_ajax_event"
+        assert fire_call[0][1]["event_type"] == "door_open"
+        assert fire_call[0][1]["device_name"] == "HALLWAY"
 
     def test_handle_event_ignores_unknown_type(self) -> None:
         entity = self._make_event_entity()

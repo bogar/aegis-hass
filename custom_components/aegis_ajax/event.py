@@ -62,3 +62,8 @@ class AjaxSecurityEvent(CoordinatorEntity[AjaxCobrandedCoordinator], EventEntity
             return
         self._trigger_event(event_type, data)
         self.async_write_ha_state()
+        # Fire bus event for logbook descriptions
+        self.hass.bus.async_fire(
+            f"{DOMAIN}_event",
+            {"event_type": event_type, **data},
+        )
