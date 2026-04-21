@@ -49,7 +49,7 @@
             "init": {
                 "title": "Aegis for Ajax — Options",
                 "data": {
-                    "poll_interval": "Fallback poll interval (seconds)",
+                    "poll_interval": "Fallback poll interval (seconds, 60-300)",
                     "use_pin_code": "Require PIN code for arm/disarm",
                     "fcm_project_id": "FCM Project ID (for push notifications)",
                     "fcm_app_id": "FCM App ID",

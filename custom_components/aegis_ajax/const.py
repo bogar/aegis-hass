@@ -102,6 +102,8 @@ CONF_FCM_SENDER_ID = "fcm_sender_id"
 
 SESSION_REFRESH_INTERVAL = 780  # 13 minutes in seconds
 STREAM_RECONNECT_MAX_BACKOFF = 60  # seconds
+MIN_POLL_INTERVAL = 60  # seconds
+MAX_POLL_INTERVAL = 300  # seconds
 DEFAULT_POLL_INTERVAL = 300  # seconds fallback (stream handles real-time updates)
 GRPC_TIMEOUT = 10.0  # seconds
 GRPC_STREAM_TIMEOUT = 30.0  # seconds

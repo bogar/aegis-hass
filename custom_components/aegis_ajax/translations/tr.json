@@ -45,7 +45,7 @@
             "init": {
                 "title": "Aegis for Ajax — Seçenekler",
                 "data": {
-                    "poll_interval": "Yedek yoklama aralığı (saniye)",
+                    "poll_interval": "Yedek yoklama aralığı (saniye, 60-300)",
                     "use_pin_code": "Kurma/devre dışı bırakma için PIN kodu gerektir",
                     "fcm_project_id": "FCM Proje Kimliği (anlık bildirimler için)",
                     "fcm_app_id": "FCM Uygulama Kimliği",

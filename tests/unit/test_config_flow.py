@@ -286,6 +286,18 @@ class TestOptionsFlow:
         )
 
     @pytest.mark.asyncio
+    async def test_options_flow_clamps_poll_interval_to_minimum(self) -> None:
+        config_entry = MagicMock()
+        config_entry.options = {}
+        flow = AjaxCobrandedOptionsFlow(config_entry)
+        flow.async_create_entry = MagicMock(return_value={"type": "create_entry"})
+
+        await flow.async_step_init({"poll_interval": 5, "use_pin_code": False})
+        flow.async_create_entry.assert_called_once_with(
+            title="", data={"poll_interval": 60, "use_pin_code": False}
+        )
+
+    @pytest.mark.asyncio
     async def test_options_flow_with_pin_code_stores_hash(self) -> None:
         """Ensure the pin code is stored as a hash, not plaintext."""
         config_entry = MagicMock()

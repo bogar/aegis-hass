@@ -45,7 +45,7 @@
             "init": {
                 "title": "Opcje Aegis for Ajax",
                 "data": {
-                    "poll_interval": "Zapasowy interwał odpytywania (sekundy)",
+                    "poll_interval": "Zapasowy interwał odpytywania (sekundy, 60-300)",
                     "use_pin_code": "Wymagaj kodu PIN do uzbrojenia/rozbrojenia",
                     "fcm_project_id": "ID projektu FCM (dla powiadomień push)",
                     "fcm_app_id": "ID aplikacji FCM",
