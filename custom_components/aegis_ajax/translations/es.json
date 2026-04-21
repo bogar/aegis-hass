@@ -49,7 +49,7 @@
             "init": {
                 "title": "Opciones de Aegis for Ajax",
                 "data": {
-                    "poll_interval": "Intervalo de sondeo de reserva (segundos)",
+                    "poll_interval": "Intervalo de sondeo de reserva (segundos, 60-300)",
                     "use_pin_code": "Requerir codigo PIN para armar/desarmar",
                     "fcm_project_id": "ID de proyecto FCM (para notificaciones push)",
                     "fcm_app_id": "ID de app FCM",

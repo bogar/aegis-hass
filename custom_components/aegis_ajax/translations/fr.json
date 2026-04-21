@@ -49,7 +49,7 @@
             "init": {
                 "title": "Options Aegis for Ajax",
                 "data": {
-                    "poll_interval": "Intervalle d'interrogation de secours (secondes)",
+                    "poll_interval": "Intervalle d'interrogation de secours (secondes, 60-300)",
                     "use_pin_code": "Exiger un code PIN pour armer/désarmer",
                     "fcm_project_id": "ID de projet FCM (pour les notifications push)",
                     "fcm_app_id": "ID d'application FCM",

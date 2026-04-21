@@ -18,7 +18,12 @@ from custom_components.aegis_ajax.api.models import Device as DeviceModel
 from custom_components.aegis_ajax.api.security import SecurityApi
 from custom_components.aegis_ajax.api.session import AuthenticationError
 from custom_components.aegis_ajax.api.spaces import SpacesApi
-from custom_components.aegis_ajax.const import DEFAULT_POLL_INTERVAL, DOMAIN
+from custom_components.aegis_ajax.const import (
+    DEFAULT_POLL_INTERVAL,
+    DOMAIN,
+    MAX_POLL_INTERVAL,
+    MIN_POLL_INTERVAL,
+)
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -39,6 +44,7 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         space_ids: list[str],
         poll_interval: int = DEFAULT_POLL_INTERVAL,
     ) -> None:
+        poll_interval = max(MIN_POLL_INTERVAL, min(MAX_POLL_INTERVAL, poll_interval))
         super().__init__(
             hass, _LOGGER, name=DOMAIN, update_interval=timedelta(seconds=poll_interval)
         )

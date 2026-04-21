@@ -49,7 +49,7 @@
             "init": {
                 "title": "Opțiuni Aegis for Ajax",
                 "data": {
-                    "poll_interval": "Interval de interogare de rezervă (secunde)",
+                    "poll_interval": "Interval de interogare de rezervă (secunde, 60-300)",
                     "use_pin_code": "Necesită cod PIN pentru armare/dezarmare",
                     "fcm_project_id": "ID proiect FCM (pentru notificări push)",
                     "fcm_app_id": "ID aplicație FCM",

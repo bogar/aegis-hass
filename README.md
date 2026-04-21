@@ -71,7 +71,7 @@ After setup, configure these in **Settings > Devices & Services > Aegis for Ajax
 
 | Option | Default | Description |
 |---|---|---|
-| Poll interval | 300s | Fallback polling interval (real-time stream handles most updates) |
+| Poll interval | 300s | Fallback polling interval, allowed range 60-300 seconds (real-time stream handles most updates) |
 | PIN code | disabled | Require PIN for arm/disarm from HA UI |
 | FCM credentials | — | Firebase credentials for push notifications (optional) |
 | Photo retention (days) | 30 | How many days to keep captured photos (1-365) |

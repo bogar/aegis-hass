@@ -35,6 +35,8 @@ from custom_components.aegis_ajax.const import (
     DEFAULT_POLL_INTERVAL,
     DOMAIN,
     KNOWN_APP_LABELS,
+    MAX_POLL_INTERVAL,
+    MIN_POLL_INTERVAL,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -244,6 +246,10 @@ class AjaxCobrandedOptionsFlow(OptionsFlow):
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if user_input is not None:
+            if "poll_interval" in user_input:
+                user_input["poll_interval"] = max(
+                    MIN_POLL_INTERVAL, min(MAX_POLL_INTERVAL, user_input["poll_interval"])
+                )
             if user_input.get("pin_code"):
                 user_input["pin_code_hash"] = hashlib.sha256(
                     user_input.pop("pin_code").encode()
@@ -260,7 +266,7 @@ class AjaxCobrandedOptionsFlow(OptionsFlow):
                         default=self._config_entry.options.get(
                             "poll_interval", DEFAULT_POLL_INTERVAL
                         ),
-                    ): vol.All(int, vol.Range(min=30, max=300)),
+                    ): vol.All(int, vol.Range(min=MIN_POLL_INTERVAL, max=MAX_POLL_INTERVAL)),
                     vol.Optional(
                         "use_pin_code",
                         default=self._config_entry.options.get("use_pin_code", False),

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from datetime import timedelta
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -61,6 +62,19 @@ class TestCoordinatorInit:
     def test_attributes(self) -> None:
         coordinator = _make_coordinator()
         assert coordinator._space_ids == ["s1"]
+
+    def test_poll_interval_is_clamped_to_minimum(self) -> None:
+        from custom_components.aegis_ajax.coordinator import AjaxCobrandedCoordinator
+
+        hass = MagicMock()
+        client = MagicMock()
+        with patch(
+            "homeassistant.helpers.update_coordinator.DataUpdateCoordinator.__init__",
+            return_value=None,
+        ) as mock_init:
+            AjaxCobrandedCoordinator(hass=hass, client=client, space_ids=["s1"], poll_interval=5)
+
+        assert mock_init.call_args.kwargs["update_interval"] == timedelta(seconds=60)
 
     def test_data_structure(self) -> None:
         coordinator = _make_coordinator()
