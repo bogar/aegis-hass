@@ -261,6 +261,23 @@ You can also manually copy the blueprint files from `custom_components/aegis_aja
 | Photo capture button missing | Only MotionCam PhOD models support on-demand capture |
 | Disarm not working | Check HA logs for specific error; ensure the system is armed before disarming |
 
+## Data Sources by Protocol
+
+This integration uses three communication channels. Each entity type depends on a specific protocol:
+
+| Protocol | Entities | Transport | Notes |
+|----------|----------|-----------|-------|
+| **gRPC stream** | Door open/close, motion, tamper, connectivity, problem, battery, temperature, signal, alarm panel state, switches, lights | `mobile-gw.prod.ajax.systems:443` | Persistent stream, < 1s latency |
+| **gRPC request** | Arm/disarm, force arm, photo capture trigger | Same server | On-demand commands |
+| **HTS** | Ethernet (IP, gateway, DNS), Wi-Fi (SSID, signal, IP), cellular (signal, network), mains power, connection type | `hts.prod.ajax.systems:443` | Proprietary binary protocol over TCP+TLS |
+| **FCM push** | Security events (alarm, arm/disarm, tamper, panic, fire, flood, motion, door_open, etc.), photo URL retrieval | Firebase Cloud Messaging | Requires FCM credentials in options |
+
+If a specific group of sensors stops working:
+- **Door/motion/battery unavailable** → gRPC stream disconnected (check logs for "Device stream started")
+- **Hub network sensors unavailable** → HTS connection lost (auto-reconnects on next poll cycle)
+- **Security events not firing** → FCM not configured or push client not started (check logs for "FCM push client started")
+- **Arm/disarm fails** → gRPC request issue (check logs for specific error)
+
 ## Roadmap
 
 - [ ] Video stream support (VideoEdge, RTSP)
