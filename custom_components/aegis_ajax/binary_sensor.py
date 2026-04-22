@@ -54,13 +54,13 @@ BINARY_SENSOR_TYPES: dict[str, BinarySensorTypeInfo] = {
 }
 
 _DEVICE_TYPE_SENSORS: dict[str, list[str]] = {
-    "door_protect": ["door_opened", "tamper"],
+    "door_protect": ["door_opened", "tamper", "external_contact_broken"],
     "door_protect_plus": ["door_opened", "tamper", "vibration", "external_contact_broken"],
-    "door_protect_fibra": ["door_opened", "tamper"],
-    "door_protect_s": ["door_opened", "tamper"],
+    "door_protect_fibra": ["door_opened", "tamper", "external_contact_broken"],
+    "door_protect_s": ["door_opened", "tamper", "external_contact_broken"],
     "door_protect_s_plus": ["door_opened", "tamper", "vibration", "external_contact_broken"],
     "door_protect_plus_fibra": ["door_opened", "tamper", "vibration", "external_contact_broken"],
-    "door_protect_g3": ["door_opened", "tamper"],
+    "door_protect_g3": ["door_opened", "tamper", "external_contact_broken"],
     "motion_protect": ["motion_detected", "tamper"],
     "motion_protect_plus": ["motion_detected", "tamper"],
     "motion_protect_fibra": ["motion_detected", "tamper"],
