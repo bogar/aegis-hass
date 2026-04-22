@@ -301,7 +301,7 @@
         title: "ALERT — Monitoring station disconnected!"
         message: >-
           The connection with the monitoring station (CRA) has been lost.
-          Contact Protegim if it is not restored shortly.
+          Contact your security provider if it is not restored shortly.
         data:
           push:
             sound:

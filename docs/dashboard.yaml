@@ -46,8 +46,8 @@ sections:
           - entity: binary_sensor.my_hub_cellular_connected
             name: Cellular Connection
             icon: mdi:signal-4g
-          - entity: sensor.my_hub_gsm_type
-            name: Connection Type
+          - entity: sensor.my_hub_mobile_network_type
+            name: Mobile Network Type
             icon: mdi:cellphone-wireless
           - entity: sensor.my_hub_battery
             name: Hub Battery
