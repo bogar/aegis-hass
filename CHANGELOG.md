@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2026-04-23
+
+### Fixed
+- Security: constant-time PIN comparison with `hmac.compare_digest()`
+- Security: proper URL validation with `urlparse` in media module
+- Security: IMEI sensor disabled by default to protect PII
+- Performance: cached SSL context in HTS client (no longer blocks event loop)
+- Performance: FCM register/start run in executor when synchronous
+- Performance: media source filesystem I/O wrapped in async executor
+- Thread safety: HTS and FCM callbacks now use `call_soon_threadsafe`
+- Immediate HTS reconnect on disconnect instead of waiting for next poll
+- Missing `pin_code` translation added to all 14 languages
+
 ## [1.0.4] - 2026-04-22
 
 ### Fixed
