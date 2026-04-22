@@ -185,6 +185,13 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if not token_hex:
                 _LOGGER.debug("No session token, skipping HTS")
                 return
+            # Pre-create SSL context in executor to avoid blocking event loop
+            if HtsClient._ssl_ctx is None:
+                import ssl  # noqa: PLC0415
+
+                HtsClient._ssl_ctx = await self.hass.async_add_executor_job(
+                    ssl.create_default_context
+                )
             self._hts_client = HtsClient(
                 login_token=bytes.fromhex(token_hex),
                 user_hex_id=session._user_hex_id or "",
