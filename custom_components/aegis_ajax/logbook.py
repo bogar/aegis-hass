@@ -15,22 +15,22 @@ if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
 _EVENT_DESCRIPTIONS: dict[str, str] = {
-    "alarm": "Alarm triggered: {device_name}",
-    "arm": "Armed by {device_name}",
-    "arm_night": "Night mode armed by {device_name}",
-    "battery_low": "Battery low: {device_name}",
-    "co_alarm": "CO alarm: {device_name}",
-    "connection_lost": "Connection lost: {device_name}",
-    "disarm": "Disarmed by {device_name}",
-    "disarm_night": "Night mode disarmed by {device_name}",
-    "door_open": "Door opened: {device_name}",
-    "fire": "Fire detected: {device_name}",
-    "flood": "Flood detected: {device_name}",
-    "glass_break": "Glass break: {device_name}",
-    "malfunction": "Malfunction: {device_name}",
-    "motion": "Motion detected: {device_name}",
-    "panic": "Panic: {device_name}",
-    "tamper": "Tamper: {device_name}",
+    "alarm": "Alarm triggered (via {device_name})",
+    "arm": "Armed (via {device_name})",
+    "arm_night": "Night mode armed (via {device_name})",
+    "battery_low": "Battery low ({device_name})",
+    "co_alarm": "CO alarm ({device_name})",
+    "connection_lost": "Connection lost ({device_name})",
+    "disarm": "Disarmed (via {device_name})",
+    "disarm_night": "Night mode disarmed (via {device_name})",
+    "door_open": "Door opened (via {device_name})",
+    "fire": "Fire detected ({device_name})",
+    "flood": "Flood detected ({device_name})",
+    "glass_break": "Glass break ({device_name})",
+    "malfunction": "Malfunction ({device_name})",
+    "motion": "Motion detected ({device_name})",
+    "panic": "Panic ({device_name})",
+    "tamper": "Tamper ({device_name})",
 }
 
 

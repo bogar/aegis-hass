@@ -74,7 +74,9 @@ class TestLogbookDescriptions:
     def test_no_room_name(self) -> None:
         handler = self._get_handler()
         result = handler(_make_event("alarm", device_name="Sensor"))
-        assert "(" not in result[LOGBOOK_ENTRY_MESSAGE]
+        assert "Sensor" in result[LOGBOOK_ENTRY_MESSAGE]
+        # No room appended
+        assert result[LOGBOOK_ENTRY_MESSAGE].count("(") == 1  # only "(via Sensor)"
 
     def test_unknown_event_type(self) -> None:
         handler = self._get_handler()
