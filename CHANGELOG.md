@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-04-23
+
+### Security
+- FCM credentials moved from options to config entry data (encrypted storage) with automatic v1→v2 migration
+- HTS debug logs no longer leak session tokens or auth payload hex dumps
+- Photo URL domain validation in camera download (defense-in-depth against SSRF)
+
+### Fixed
+- Replace all `assert` statements with explicit checks in HTS client and config flow
+- `send_command()` now raises `NotImplementedError` instead of silent no-op
+- Event entity unregisters on removal via `async_will_remove_from_hass` (prevents stale refs)
+- Fix redundant `except (HtsConnectionError, Exception)` clause in coordinator
+- Replace deprecated `asyncio.get_event_loop()` with `get_running_loop()`
+- Alarm panel model from actual device type instead of hardcoded "Hub"
+- Timezone-aware photo timestamps using `dt_util.now()`
+- ProblemSensor `available` property now checks device exists
+- Fix `_encode_varint_field` to handle values > 127 (proper multi-byte encoding)
+- OptionsFlow compatible with HA 2024.11+ property descriptor
+- Notification parser exception logging now includes traceback
+- Remove redundant `_attr_icon` on button (already in `icons.json`)
+- Remove duplicate `AjaxCobrandedConfigEntry` type alias in diagnostics
+
+### Changed
+- `force_arm` / `force_arm_night` services now support entity target selector
+- Cache SIM info (refresh once per hour instead of every poll cycle)
+- Skip device snapshot when persistent gRPC streams are healthy
+- HTS frame reading uses 4096-byte chunk buffering instead of byte-by-byte
+- `async_refresh()` → `async_request_refresh()` after arm/disarm (debounced)
+- Restore normal poll interval after successful re-authentication
+- HTS reconnect deferred to next poll cycle instead of immediate retry
+- Photo cleanup deferred to background task (no longer blocks startup)
+- Centralize proto `sys.path` setup in single module (removed 9 scattered copies)
+- Service field translations added for all 14 languages
+
+### Documentation
+- README: services target selector, FCM storage location
+- `services.yaml` with target and fields definitions
+- Sync `pyproject.toml` version with manifest
+
 ## [1.0.6] - 2026-04-23
 
 ### Fixed
