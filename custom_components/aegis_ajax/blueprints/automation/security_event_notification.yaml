@@ -31,6 +31,23 @@ blueprint:
 
 variables:
   event_type_filter: !input event_type_filter
+  event_labels:
+    alarm: "🚨 Alarm"
+    arm: "🔒 Armed"
+    arm_night: "🌙 Night mode"
+    disarm: "🔓 Disarmed"
+    disarm_night: "🔓 Night mode off"
+    tamper: "⚠️ Tamper"
+    panic: "🆘 Panic"
+    battery_low: "🪫 Low battery"
+    connection_lost: "📡 Connection lost"
+    malfunction: "⚙️ Malfunction"
+    fire: "🔥 Fire"
+    co_alarm: "☁️ CO alarm"
+    flood: "💧 Flood"
+    glass_break: "💔 Glass break"
+    motion: "🏃 Motion"
+    door_open: "🚪 Door open"
 
 triggers:
   - trigger: state
@@ -43,18 +60,19 @@ conditions:
   - condition: template
     value_template: >-
       {{ event_type_filter == '' or trigger.to_state.attributes.event_type == event_type_filter }}
+  - condition: template
+    value_template: >-
+      {{ (now() - trigger.to_state.last_changed).total_seconds() < 10 }}
 
 actions:
   - action: !input notify_service
     data:
       title: >-
-        Security: {{ trigger.to_state.attributes.event_type | replace('_', ' ') | title }}
+        {{ event_labels.get(trigger.to_state.attributes.event_type, trigger.to_state.attributes.event_type | replace('_', ' ') | title) }}
       message: >-
         {% set attrs = trigger.to_state.attributes %}
         {{ attrs.get('device_name', 'Unknown device') }}
-        {% if attrs.get('room_name') %} ({{ attrs.room_name }}){% endif %}
-        — {{ attrs.event_type | replace('_', ' ') }}
-        {% if attrs.get('device_type') %} [{{ attrs.device_type | replace('_', ' ') | title }}]{% endif %}
+        {%- if attrs.get('room_name') %} ({{ attrs.room_name }}){% endif %}
       data:
         push:
           sound: default

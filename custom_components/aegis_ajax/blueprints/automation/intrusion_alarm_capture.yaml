@@ -62,6 +62,9 @@ conditions:
     value_template: >-
       {{ trigger.to_state.attributes.event_type is defined
          and trigger.to_state.attributes.event_type == 'alarm' }}
+  - condition: template
+    value_template: >-
+      {{ (now() - trigger.to_state.last_changed).total_seconds() < 10 }}
 
 actions:
   - parallel:
