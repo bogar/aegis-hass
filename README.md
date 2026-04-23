@@ -239,7 +239,7 @@ Aegis includes 8 ready-to-use automation blueprints. Import them via URL in **Se
 
 | Blueprint | Description | Import URL |
 |-----------|-------------|------------|
-| **Security Event Notification** | Detailed push notification on any security event with device name and room | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/security_event_notification.yaml) |
+| **Security Event Notification** | Push notification with emoji-labeled event type, device name and room. Ignores stale events on reload. | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/security_event_notification.yaml) |
 | **Intrusion Alarm + Capture** | Capture all cameras and send critical notification when intrusion alarm fires | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/intrusion_alarm_capture.yaml) |
 | **Tamper Alert** | Critical notification when device tampering is detected | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/tamper_alert.yaml) |
 | **Door Opened While Armed** | Preventive alert when a door opens with the alarm armed, with optional warning script | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/door_opened_while_armed.yaml) |
@@ -249,6 +249,8 @@ Aegis includes 8 ready-to-use automation blueprints. Import them via URL in **Se
 | **Connectivity Loss Escalation** | Progressive alerts on hub connectivity loss (warning → critical → restored) | [Import](https://github.com/bvis/aegis-hass/blob/main/custom_components/aegis_ajax/blueprints/automation/connectivity_loss_escalation.yaml) |
 
 You can also manually copy the blueprint files from `custom_components/aegis_ajax/blueprints/automation/` to your `config/blueprints/automation/aegis_ajax/` directory.
+
+> **Note**: Blueprints are templates — existing automations created from them are **not** updated automatically. After updating the integration, delete and re-import the blueprint in **Settings → Automations → Blueprints** to get the latest version, then recreate the automation.
 
 ## Troubleshooting
 
