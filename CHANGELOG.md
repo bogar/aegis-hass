@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-04-23
+
+### Added
+- **Force arm option** — new checkbox in Options to always arm ignoring open sensors and malfunctions (#32)
+- **Descriptive arm/disarm error messages** — when arming fails, the error lists the specific devices causing the issue (e.g. "Front Door: open; Keypad: low battery")
+- All user-facing error messages fully translated in 14 languages (arm, disarm, PIN code, hub busy, etc.)
+
 ## [1.0.9] - 2026-04-23
 
 ### Changed
