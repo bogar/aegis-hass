@@ -84,6 +84,7 @@ After setup, configure these in **Settings > Devices & Services > Aegis for Ajax
 | Option | Default | Description |
 |---|---|---|
 | Poll interval | 300s | Fallback polling interval, allowed range 60-300 seconds (real-time stream handles most updates) |
+| Force arm | disabled | Arm ignoring open sensors and malfunctions (bypasses hub safety checks) |
 | PIN code | disabled | Require PIN for arm/disarm from HA UI |
 | FCM credentials | — | Firebase credentials for push notifications (optional) |
 | Photo retention (days) | 30 | How many days to keep captured photos (1-365) |
@@ -261,6 +262,7 @@ You can also manually copy the blueprint files from `custom_components/aegis_aja
 | Motion/door not updating | Check that the gRPC stream is connected (look for "Device stream started" in logs) |
 | Sensors unavailable after reload | Use full HA restart instead of integration reload (gRPC streams require restart) |
 | Photo capture button missing | Only MotionCam PhOD models support on-demand capture |
+| Arm fails with "malfunctions detected" | Open sensors or low batteries prevent arming. Enable **Force arm** in Options, or use the `aegis_ajax.force_arm` service. The error message lists the blocking devices. |
 | Disarm not working | Check HA logs for specific error; ensure the system is armed before disarming |
 
 ## Data Sources by Protocol
