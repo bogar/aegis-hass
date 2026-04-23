@@ -23,18 +23,6 @@ class SecurityError(Exception):
     """Raised when a security command fails."""
 
 
-_ERROR_MESSAGES: dict[str, str] = {
-    "hub_detected_malfunctions": (
-        "Cannot arm: hub detected malfunctions (open sensors or low battery)."
-        " Use force arm or fix the issues first."
-    ),
-    "hub_not_connected": "Cannot arm: hub is offline.",
-    "already_in_the_requested_security_state": "Already in the requested state.",
-    "hub_busy": "Hub is busy, try again in a few seconds.",
-    "another_transition_is_in_progress": "Another arm/disarm operation is in progress.",
-}
-
-
 class SecurityApi:
     """API operations for arming/disarming."""
 
@@ -62,8 +50,7 @@ class SecurityApi:
             if error_type == "already_in_the_requested_security_state":
                 _LOGGER.debug("Space %s already armed", space_id)
                 return
-            msg = _ERROR_MESSAGES.get(error_type, f"Arm command rejected: {error_type}")
-            raise SecurityError(msg)
+            raise SecurityError(error_type)
         _LOGGER.debug("Armed space %s", space_id)
 
     async def disarm(self, space_id: str) -> None:
@@ -122,8 +109,7 @@ class SecurityApi:
             if error_type == "already_in_the_requested_security_state":
                 _LOGGER.debug("Space %s already in night mode", space_id)
                 return
-            msg = _ERROR_MESSAGES.get(error_type, f"Arm night mode rejected: {error_type}")
-            raise SecurityError(msg)
+            raise SecurityError(error_type)
         _LOGGER.debug("Armed space %s in night mode", space_id)
 
     async def disarm_from_night_mode(self, space_id: str) -> None:

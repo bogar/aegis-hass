@@ -28,6 +28,73 @@ if TYPE_CHECKING:
 
 _LOGGER = logging.getLogger(__name__)
 
+_ARM_ERRORS: dict[str, dict[str, str]] = {
+    "hub_detected_malfunctions": {
+        "en": "Cannot arm: open sensors or malfunctions detected",
+        "es": "No se puede armar: sensores abiertos o averías detectadas",
+        "ca": "No es pot armar: sensors oberts o avaries detectades",
+        "de": "Scharfschalten nicht möglich: offene Sensoren oder Störungen",
+        "fr": "Impossible d'armer : capteurs ouverts ou dysfonctionnements",
+        "it": "Impossibile inserire: sensori aperti o malfunzionamenti",
+        "nl": "Kan niet inschakelen: open sensoren of storingen",
+        "pl": "Nie można uzbroić: otwarte czujniki lub awarie",
+        "pt": "Não é possível armar: sensores abertos ou avarias",
+        "pt-BR": "Não é possível armar: sensores abertos ou falhas",
+        "ro": "Nu se poate arma: senzori deschiși sau defecțiuni",
+        "tr": "Kurma başarısız: açık sensörler veya arızalar",
+        "uk": "Неможливо увімкнути: відкриті датчики або несправності",
+        "cs": "Nelze zastřežit: otevřené senzory nebo poruchy",
+    },
+    "hub_not_connected": {
+        "en": "Cannot arm: hub is offline",
+        "es": "No se puede armar: hub desconectado",
+        "ca": "No es pot armar: hub desconnectat",
+        "de": "Scharfschalten nicht möglich: Hub offline",
+        "fr": "Impossible d'armer : hub hors ligne",
+        "it": "Impossibile inserire: hub offline",
+        "nl": "Kan niet inschakelen: hub offline",
+        "pl": "Nie można uzbroić: hub offline",
+        "pt": "Não é possível armar: hub offline",
+        "pt-BR": "Não é possível armar: hub offline",
+        "ro": "Nu se poate arma: hub deconectat",
+        "tr": "Kurma başarısız: hub çevrimdışı",
+        "uk": "Неможливо увімкнути: хаб офлайн",
+        "cs": "Nelze zastřežit: hub offline",
+    },
+    "hub_busy": {
+        "en": "Hub is busy, try again in a few seconds",
+        "es": "Hub ocupado, inténtalo en unos segundos",
+        "ca": "Hub ocupat, torna-ho a provar en uns segons",
+        "de": "Hub beschäftigt, versuchen Sie es in einigen Sekunden erneut",
+        "fr": "Hub occupé, réessayez dans quelques secondes",
+        "it": "Hub occupato, riprova tra qualche secondo",
+        "nl": "Hub bezet, probeer het over een paar seconden opnieuw",
+        "pl": "Hub zajęty, spróbuj ponownie za kilka sekund",
+        "pt": "Hub ocupado, tente novamente em alguns segundos",
+        "pt-BR": "Hub ocupado, tente novamente em alguns segundos",
+        "ro": "Hub ocupat, încercați din nou în câteva secunde",
+        "tr": "Hub meşgul, birkaç saniye sonra tekrar deneyin",
+        "uk": "Хаб зайнятий, спробуйте через кілька секунд",
+        "cs": "Hub je zaneprázdněn, zkuste to za několik sekund",
+    },
+    "another_transition_is_in_progress": {
+        "en": "Another arm/disarm operation is in progress",
+        "es": "Otra operación de armado/desarmado en curso",
+        "ca": "Una altra operació d'armat/desarmat en curs",
+        "de": "Eine andere Scharf-/Unscharfschaltung läuft",
+        "fr": "Une autre opération d'armement/désarmement est en cours",
+        "it": "Un'altra operazione di inserimento/disinserimento è in corso",
+        "nl": "Een andere in-/uitschakelbewerking is bezig",
+        "pl": "Inna operacja uzbrojenia/rozbrojenia w toku",
+        "pt": "Outra operação de armar/desarmar em curso",
+        "pt-BR": "Outra operação de armar/desarmar em andamento",
+        "ro": "O altă operațiune de armare/dezarmare este în curs",
+        "tr": "Başka bir kurma/devre dışı bırakma işlemi devam ediyor",
+        "uk": "Інша операція увімкнення/вимкнення в процесі",
+        "cs": "Probíhá jiná operace zastřežení/odstřežení",
+    },
+}
+
 _ISSUE_LABELS: dict[str, dict[str, str]] = {
     "open": {
         "en": "open",
@@ -221,10 +288,17 @@ class AjaxAlarmControlPanel(CoordinatorEntity[AjaxCobrandedCoordinator], AlarmCo
                 issues.append(f"{device.name}: {self._issue_label('tamper')}")
         return "; ".join(issues[:5]) if issues else ""
 
+    def _translate_error(self, error_type: str) -> str:
+        """Translate an arm error type to the current HA language."""
+        lang = self.hass.config.language if self.hass else "en"
+        translations = _ARM_ERRORS.get(error_type, {})
+        return translations.get(lang, translations.get("en", error_type))
+
     def _arm_error(self, err: Exception) -> HomeAssistantError:
         """Build a descriptive error, enriching malfunction errors with device details."""
-        msg = str(err)
-        if "malfunction" in msg.lower():
+        error_type = str(err)
+        msg = self._translate_error(error_type)
+        if "malfunction" in error_type:
             details = self._describe_blocking_issues()
             if details:
                 msg = f"{msg} — {details}"
