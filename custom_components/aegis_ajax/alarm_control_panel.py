@@ -93,6 +93,38 @@ _ARM_ERRORS: dict[str, dict[str, str]] = {
         "uk": "Інша операція увімкнення/вимкнення в процесі",
         "cs": "Probíhá jiná operace zastřežení/odstřežení",
     },
+    "disarm_rejected": {
+        "en": "Cannot disarm: command rejected by hub",
+        "es": "No se puede desarmar: comando rechazado por el hub",
+        "ca": "No es pot desarmar: comanda rebutjada pel hub",
+        "de": "Unscharfschalten nicht möglich: Befehl vom Hub abgelehnt",
+        "fr": "Impossible de désarmer : commande rejetée par le hub",
+        "it": "Impossibile disinserire: comando rifiutato dall'hub",
+        "nl": "Kan niet uitschakelen: opdracht geweigerd door hub",
+        "pl": "Nie można rozbroić: polecenie odrzucone przez hub",
+        "pt": "Não é possível desarmar: comando rejeitado pelo hub",
+        "pt-BR": "Não é possível desarmar: comando rejeitado pelo hub",
+        "ro": "Nu se poate dezarma: comandă respinsă de hub",
+        "tr": "Devre dışı bırakılamıyor: komut hub tarafından reddedildi",
+        "uk": "Неможливо вимкнути: команду відхилено хабом",
+        "cs": "Nelze odstřežit: příkaz odmítnut hubem",
+    },
+    "invalid_alarm_code": {
+        "en": "Invalid alarm code",
+        "es": "Código de alarma incorrecto",
+        "ca": "Codi d'alarma incorrecte",
+        "de": "Ungültiger Alarmcode",
+        "fr": "Code d'alarme invalide",
+        "it": "Codice allarme non valido",
+        "nl": "Ongeldige alarmcode",
+        "pl": "Nieprawidłowy kod alarmu",
+        "pt": "Código de alarme inválido",
+        "pt-BR": "Código de alarme inválido",
+        "ro": "Cod de alarmă invalid",
+        "tr": "Geçersiz alarm kodu",
+        "uk": "Невірний код тривоги",
+        "cs": "Neplatný kód alarmu",
+    },
 }
 
 _ISSUE_LABELS: dict[str, dict[str, str]] = {
@@ -230,7 +262,7 @@ class AjaxAlarmControlPanel(CoordinatorEntity[AjaxCobrandedCoordinator], AlarmCo
         stored_hash = self._get_options().get("pin_code_hash", "")
         computed = hashlib.sha256(code.encode()).hexdigest() if code else ""
         if not code or not hmac.compare_digest(computed, stored_hash):
-            raise HomeAssistantError("Invalid alarm code")
+            raise HomeAssistantError(self._translate_error("invalid_alarm_code"))
 
     @property
     def _space(self) -> Space | None:
@@ -335,7 +367,7 @@ class AjaxAlarmControlPanel(CoordinatorEntity[AjaxCobrandedCoordinator], AlarmCo
         try:
             await self.coordinator.security_api.disarm(self._space_id)
         except SecurityError as err:
-            raise HomeAssistantError(str(err)) from err
+            raise HomeAssistantError(self._translate_error(str(err))) from err
         self._optimistic_state_update(SecurityState.DISARMED)
         await self.coordinator.async_request_refresh()
 

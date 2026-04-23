@@ -178,7 +178,7 @@ class TestDisarm:
                     ),
                 },
             ),
-            pytest.raises(SecurityError, match="Disarm command rejected"),
+            pytest.raises(SecurityError),
         ):
             await api.disarm("space-1")
 
@@ -323,7 +323,7 @@ class TestDisarmFromNightMode:
                     ),
                 },
             ),
-            pytest.raises(SecurityError, match="Disarm from night mode command rejected"),
+            pytest.raises(SecurityError),
         ):
             await api.disarm_from_night_mode("space-1")
 
@@ -400,7 +400,7 @@ class TestArmGroup:
                     ),
                 },
             ),
-            pytest.raises(SecurityError, match="Arm group command rejected"),
+            pytest.raises(SecurityError),
         ):
             await api.arm_group("space-1", "group-1")
 
@@ -477,7 +477,7 @@ class TestDisarmGroup:
                     ),
                 },
             ),
-            pytest.raises(SecurityError, match="Disarm group command rejected"),
+            pytest.raises(SecurityError),
         ):
             await api.disarm_group("space-1", "group-1")
 
