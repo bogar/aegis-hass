@@ -298,6 +298,68 @@ class TestStreamHandlers:
 
         assert coordinator.devices["d1"].statuses.get("interference") is True
 
+    def test_handle_status_update_wire_input_alert_true(self) -> None:
+        coordinator = self._make_coordinator_with_stream()
+        coordinator.devices["d1"] = _make_device("d1")
+
+        coordinator._handle_status_update(
+            "d1",
+            "wire_input_status",
+            {"op": 2, "is_alert": True, "alarm_type": "intrusion"},
+        )
+
+        assert coordinator.devices["d1"].statuses.get("wire_input_alert") is True
+        assert coordinator.devices["d1"].statuses.get("wire_input_alarm_type") == "intrusion"
+
+    def test_handle_status_update_wire_input_alert_false_clears(self) -> None:
+        coordinator = self._make_coordinator_with_stream()
+        device = Device(
+            id="d1",
+            hub_id="hub-1",
+            name="Sensor",
+            device_type="wire_input_mt",
+            room_id=None,
+            group_id=None,
+            state=DeviceState.ONLINE,
+            malfunctions=0,
+            bypassed=False,
+            statuses={"wire_input_alert": True, "wire_input_alarm_type": "intrusion"},
+            battery=None,
+        )
+        coordinator.devices["d1"] = device
+
+        coordinator._handle_status_update(
+            "d1",
+            "wire_input_status",
+            {"op": 2, "is_alert": False, "alarm_type": "intrusion"},
+        )
+
+        assert coordinator.devices["d1"].statuses.get("wire_input_alert") is False
+        # alarm_type stays — same wire input, just cleared its alarm
+        assert coordinator.devices["d1"].statuses.get("wire_input_alarm_type") == "intrusion"
+
+    def test_handle_status_update_wire_input_remove_drops_both_keys(self) -> None:
+        coordinator = self._make_coordinator_with_stream()
+        device = Device(
+            id="d1",
+            hub_id="hub-1",
+            name="Sensor",
+            device_type="wire_input_mt",
+            room_id=None,
+            group_id=None,
+            state=DeviceState.ONLINE,
+            malfunctions=0,
+            bypassed=False,
+            statuses={"wire_input_alert": True, "wire_input_alarm_type": "intrusion"},
+            battery=None,
+        )
+        coordinator.devices["d1"] = device
+
+        coordinator._handle_status_update("d1", "wire_input_status", {"op": 3})
+
+        assert "wire_input_alert" not in coordinator.devices["d1"].statuses
+        assert "wire_input_alarm_type" not in coordinator.devices["d1"].statuses
+
     def test_handle_status_update_unknown_device_is_ignored(self) -> None:
         coordinator = self._make_coordinator_with_stream()
         # No devices in coordinator
