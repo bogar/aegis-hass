@@ -374,10 +374,19 @@ class DevicesApi:
                                         if status_name is None:
                                             continue
                                         op = int(update.status_update.update_type)
+                                        payload: dict[str, Any] = {"op": op}
+                                        if status_name == "wire_input_status":
+                                            ws = status.wire_input_status
+                                            if hasattr(ws, "is_alert"):
+                                                payload["is_alert"] = bool(ws.is_alert)
+                                            if hasattr(ws, "type"):
+                                                payload["alarm_type"] = _ALARM_TYPE_NAMES.get(
+                                                    int(ws.type), "unspecified"
+                                                )
                                         on_status_update(
                                             device_id,
                                             status_name,
-                                            {"op": op},
+                                            payload,
                                         )
                                     elif update_kind == "snapshot_update":
                                         device = self.parse_device(

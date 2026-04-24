@@ -370,6 +370,15 @@ class TestDeviceTypeSensors:
     def test_wire_input_has_alert_sensor(self) -> None:
         assert "wire_input_alert" in _DEVICE_TYPE_SENSORS["wire_input"]
 
+    def test_wire_input_mt_keeps_tamper(self) -> None:
+        # Backwards compatibility: wire_input_mt used to fall back to the
+        # default ["tamper"] bucket. Keep the tamper entity so existing users
+        # don't see orphaned "unavailable" entries after upgrade.
+        assert "tamper" in _DEVICE_TYPE_SENSORS["wire_input_mt"]
+
+    def test_wire_input_keeps_tamper(self) -> None:
+        assert "tamper" in _DEVICE_TYPE_SENSORS["wire_input"]
+
 
 class TestWireInputAlertSensor:
     """Binary sensor behaviour for wired-input alerts (MultiTransmitter children)."""

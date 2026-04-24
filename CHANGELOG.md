@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0-beta.2] - 2026-04-24
+
+### Fixed
+- MultiTransmitter wire input alert now toggles back to "off" when the wired contact closes — the stream handler was discarding the `is_alert` boolean and hard-coding updates to `True`, so the entity got stuck on after the first trigger (#36)
+- Restored the `tamper` entity on `wire_input`/`wire_input_mt` devices so previously-registered tamper sensors no longer show as "unavailable" after upgrading from 1.1.x (#36)
+
 ## [1.2.0-beta.1] - 2026-04-24
 
 ### Added
