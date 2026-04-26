@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.1-beta.3] - 2026-04-26
 
 ### Fixed
 - FireProtect 2 detectors no longer fall back to a tamper-only entity set: Ajax's hub catalog uses the `fire_protect_two*` naming for the current generation while we only knew the legacy `fire_protect_2`, so smoke / heat / CO binary sensors were never created. All FireProtect 2 variants known to the v3 ObjectType (`fire_protect_two`, `_plus`, `_sb`, `_hcrb`, `_hcsb`, `_hrb`, `_hsb`, `_crb`, `_csb`, `_h_ac`, `_c_ac`, `_hc_ac`, `_hs_ac`, `_hsc_ac`, plus the UL-listed sub-models) now map to the appropriate sensor set, with single-sensor variants exposing only the relevant entity. (#51)
