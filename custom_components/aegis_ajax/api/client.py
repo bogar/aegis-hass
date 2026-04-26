@@ -102,6 +102,32 @@ class AjaxGrpcClient:
         self._session.clear_session()
         _LOGGER.debug("gRPC channel closed")
 
+    async def logout(self) -> None:
+        """Invalidate the current Ajax session server-side via LogoutService.
+
+        Called only when the user permanently removes the integration —
+        not on every reload. Reload paths must keep the session alive so
+        the next restart can reuse the token instead of opening another
+        active session in the Ajax account.
+        """
+        if self._channel is None or not self._session.is_authenticated:
+            return
+        from v3.mobilegwsvc.service.logout import (  # noqa: PLC0415
+            endpoint_pb2_grpc,
+            request_pb2,
+        )
+
+        try:
+            stub = endpoint_pb2_grpc.LogoutServiceStub(self._channel)
+            request = request_pb2.LogoutRequest()
+            metadata = self._session.get_call_metadata()
+            await stub.execute(request, metadata=metadata, timeout=10)
+            _LOGGER.debug("Ajax session logged out (server-side invalidated)")
+        except Exception:  # noqa: BLE001
+            _LOGGER.debug("Logout call failed (best-effort)", exc_info=True)
+        finally:
+            self._session.clear_session()
+
     def _get_channel(self) -> grpc.aio.Channel:
         if self._channel is None:
             raise ConnectionError("gRPC channel not connected. Call connect() first.")

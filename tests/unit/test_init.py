@@ -486,3 +486,151 @@ class TestAsyncUnloadEntry:
 
         assert result is False
         mock_coordinator.async_shutdown.assert_not_called()
+
+
+class TestSessionPersistence:
+    """Verify the session-token write-back path between coordinator and entry.data."""
+
+    @pytest.mark.asyncio
+    async def test_setup_passes_persist_callback_to_coordinator(self) -> None:
+        from custom_components.aegis_ajax import async_setup_entry
+
+        hass = MagicMock()
+        hass.data = {}
+        hass.config_entries.async_forward_entry_setups = AsyncMock(return_value=True)
+
+        entry = MagicMock()
+        entry.entry_id = "entry-1"
+        entry.data = {
+            "email": "user@example.com",
+            "password_hash": "hash",
+            "spaces": ["s1"],
+            "session_token": "tok-old",
+            "user_hex_id": "hex-1",
+        }
+        entry.options = {}
+
+        mock_client = MagicMock()
+        mock_client.connect = AsyncMock()
+        mock_client.session = MagicMock()
+
+        captured: dict[str, object] = {}
+
+        def _record(*args: object, **kwargs: object) -> MagicMock:
+            captured["kwargs"] = kwargs
+            cm = MagicMock()
+            cm.async_config_entry_first_refresh = AsyncMock()
+            cm.async_start_push_notifications = AsyncMock()
+            return cm
+
+        with (
+            patch("custom_components.aegis_ajax.AjaxGrpcClient", return_value=mock_client),
+            patch(
+                "custom_components.aegis_ajax.AjaxCobrandedCoordinator",
+                side_effect=_record,
+            ),
+        ):
+            await async_setup_entry(hass, entry)
+
+        # Coordinator received an on_session_persist callback
+        assert "on_session_persist" in captured["kwargs"]
+        callback = captured["kwargs"]["on_session_persist"]
+        assert callable(callback)
+
+        # Calling the callback writes the new credentials back to the entry
+        callback("tok-new", "hex-1")
+        hass.config_entries.async_update_entry.assert_called_once()
+        new_data = hass.config_entries.async_update_entry.call_args.kwargs["data"]
+        assert new_data["session_token"] == "tok-new"
+        assert new_data["user_hex_id"] == "hex-1"
+
+    @pytest.mark.asyncio
+    async def test_persist_callback_skips_when_unchanged(self) -> None:
+        from custom_components.aegis_ajax import async_setup_entry
+
+        hass = MagicMock()
+        hass.data = {}
+        hass.config_entries.async_forward_entry_setups = AsyncMock(return_value=True)
+
+        entry = MagicMock()
+        entry.entry_id = "entry-1"
+        entry.data = {
+            "email": "user@example.com",
+            "password_hash": "hash",
+            "spaces": ["s1"],
+            "session_token": "tok-current",
+            "user_hex_id": "hex-1",
+        }
+        entry.options = {}
+
+        captured: dict[str, object] = {}
+
+        def _record(*args: object, **kwargs: object) -> MagicMock:
+            captured["kwargs"] = kwargs
+            cm = MagicMock()
+            cm.async_config_entry_first_refresh = AsyncMock()
+            cm.async_start_push_notifications = AsyncMock()
+            return cm
+
+        with (
+            patch(
+                "custom_components.aegis_ajax.AjaxGrpcClient",
+                return_value=MagicMock(connect=AsyncMock(), session=MagicMock()),
+            ),
+            patch(
+                "custom_components.aegis_ajax.AjaxCobrandedCoordinator",
+                side_effect=_record,
+            ),
+        ):
+            await async_setup_entry(hass, entry)
+
+        callback = captured["kwargs"]["on_session_persist"]
+        # Same token as already stored — must not write
+        callback("tok-current", "hex-1")
+        hass.config_entries.async_update_entry.assert_not_called()
+
+
+class TestAsyncRemoveEntry:
+    """Verify the LogoutService call path on permanent removal."""
+
+    @pytest.mark.asyncio
+    async def test_remove_entry_with_session_calls_logout(self) -> None:
+        from custom_components.aegis_ajax import async_remove_entry
+
+        hass = MagicMock()
+        entry = MagicMock()
+        entry.data = {
+            "email": "user@example.com",
+            "password_hash": "hash",
+            "session_token": "tok",
+            "user_hex_id": "hex",
+        }
+
+        mock_client = MagicMock()
+        mock_client.connect = AsyncMock()
+        mock_client.logout = AsyncMock()
+        mock_client.close = AsyncMock()
+        mock_client.session = MagicMock()
+
+        with patch("custom_components.aegis_ajax.AjaxGrpcClient", return_value=mock_client):
+            await async_remove_entry(hass, entry)
+
+        mock_client.connect.assert_awaited_once()
+        mock_client.logout.assert_awaited_once()
+        mock_client.close.assert_awaited_once()
+
+    @pytest.mark.asyncio
+    async def test_remove_entry_without_session_skips_logout(self) -> None:
+        from custom_components.aegis_ajax import async_remove_entry
+
+        hass = MagicMock()
+        entry = MagicMock()
+        entry.data = {"email": "user@example.com", "password_hash": "hash"}
+
+        mock_client = MagicMock()
+        mock_client.logout = AsyncMock()
+
+        with patch("custom_components.aegis_ajax.AjaxGrpcClient", return_value=mock_client):
+            await async_remove_entry(hass, entry)
+
+        mock_client.logout.assert_not_called()
