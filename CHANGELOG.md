@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1-beta.1] - 2026-04-26
+
+### Added
+- New optional `auto_create_labels` toggle in the integration's options. When disabled the integration no longer recreates and reassigns the `aegis_*` labels on every restart, so users who manage Home Assistant labels manually can clean them up without having them come back. Default stays enabled to preserve previous behaviour. (#47)
+
 ## [1.2.0] - 2026-04-25
 
 ### Added
