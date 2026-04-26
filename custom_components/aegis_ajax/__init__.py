@@ -197,13 +197,41 @@ async def async_setup_entry(hass: HomeAssistant, entry: AjaxCobrandedConfigEntry
         )
     # Restore session token from stored data to skip re-login (and 2FA) on restart
     if entry.data.get("session_token") and entry.data.get("user_hex_id"):
+        _LOGGER.debug(
+            "Restoring stored Ajax session for entry %s (user=%s)",
+            entry.entry_id,
+            entry.data["user_hex_id"],
+        )
         client.session.set_session(str(entry.data["session_token"]), str(entry.data["user_hex_id"]))
+    else:
+        _LOGGER.debug(
+            "No stored Ajax session for entry %s — coordinator will log in on first refresh",
+            entry.entry_id,
+        )
     await client.connect()
+
+    def _persist_session(token: str, user_hex_id: str) -> None:
+        """Write the latest session token back to the config entry.
+
+        Called by the coordinator after every successful login so that a
+        restart can reuse the freshest token instead of forcing another
+        login (which would create yet another active session in Ajax).
+        """
+        if (
+            entry.data.get("session_token") == token
+            and entry.data.get("user_hex_id") == user_hex_id
+        ):
+            return
+        new_data = {**entry.data, "session_token": token, "user_hex_id": user_hex_id}
+        hass.config_entries.async_update_entry(entry, data=new_data)
+        _LOGGER.debug("Persisted refreshed Ajax session for entry %s", entry.entry_id)
+
     coordinator = AjaxCobrandedCoordinator(
         hass=hass,
         client=client,
         space_ids=entry.data.get("spaces", []),
         poll_interval=entry.options.get("poll_interval", DEFAULT_POLL_INTERVAL),
+        on_session_persist=_persist_session,
     )
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
@@ -380,3 +408,41 @@ async def async_unload_entry(hass: HomeAssistant, entry: AjaxCobrandedConfigEntr
         coordinator: AjaxCobrandedCoordinator = entry.runtime_data
         await coordinator.async_shutdown()
     return unload_ok
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: AjaxCobrandedConfigEntry) -> None:
+    """Invalidate the Ajax session server-side when the user removes the integration.
+
+    Called only on permanent removal, not on reload — reloads route
+    through async_unload_entry which deliberately keeps the session
+    alive so the next setup can reuse the token. Without this hook the
+    Ajax account would keep accumulating "Aegis" devices in its active
+    sessions list every time someone uninstalls and reinstalls.
+    """
+    if "session_token" not in entry.data or "user_hex_id" not in entry.data:
+        return
+
+    common_kwargs = {
+        "email": entry.data["email"],
+        "device_id": entry.data.get("device_id"),
+        "app_label": entry.data.get("app_label", ""),
+    }
+    try:
+        if entry.data.get("password_hash"):
+            client = AjaxGrpcClient(password_hash=entry.data["password_hash"], **common_kwargs)
+        elif entry.data.get("password"):
+            client = AjaxGrpcClient(password=entry.data["password"], **common_kwargs)
+        else:
+            return
+    except Exception:  # noqa: BLE001
+        _LOGGER.debug("Logout skipped — could not rebuild client", exc_info=True)
+        return
+
+    client.session.set_session(str(entry.data["session_token"]), str(entry.data["user_hex_id"]))
+    try:
+        await client.connect()
+        await client.logout()
+    except Exception:  # noqa: BLE001
+        _LOGGER.debug("Logout call failed during removal (best-effort)", exc_info=True)
+    finally:
+        await client.close()

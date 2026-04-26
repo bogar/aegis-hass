@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- Reloading the integration no longer accumulates new active sessions in the user's Ajax account. Three related gaps closed: (a) the latest session token is now persisted back to the config entry after every successful login (it used to be saved only on the initial config flow), (b) the coordinator detects `UNAUTHENTICATED` errors from the gRPC API, forces a fresh login, persists it and retries the failed call once instead of falling out as `UpdateFailed`, and (c) when the user permanently removes the integration, `LogoutService.execute` is now called server-side via the new `async_remove_entry` hook so the dangling session disappears from the Ajax account too. Reload paths still leave the session alive on purpose so the next setup can reuse the token. (#53)
+
 ## [1.2.1-beta.3] - 2026-04-26
 
 ### Fixed

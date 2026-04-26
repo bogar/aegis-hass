@@ -162,6 +162,60 @@ class TestAsyncUpdateData:
             await coordinator._async_update_data()
 
     @pytest.mark.asyncio
+    async def test_login_persists_session_via_callback(self) -> None:
+        """A successful login pushes the new token through on_session_persist."""
+        coordinator = _make_coordinator()
+        coordinator._client.session.is_authenticated = False
+        coordinator._client.session.session_token = "tok-new"
+        coordinator._client.session.user_hex_id = "hex-1"
+        coordinator._client.login = AsyncMock()
+        callback = MagicMock()
+        coordinator._on_session_persist = callback
+        coordinator._spaces_api = MagicMock()
+        coordinator._spaces_api.list_spaces = AsyncMock(return_value=[])
+        coordinator._devices_api = MagicMock()
+        coordinator._devices_api.get_devices_snapshot = AsyncMock(return_value=[])
+
+        await coordinator._async_update_data()
+
+        coordinator._client.login.assert_awaited_once()
+        callback.assert_called_once_with("tok-new", "hex-1")
+
+    @pytest.mark.asyncio
+    async def test_unauthenticated_error_triggers_relogin_and_retry(self) -> None:
+        """Stale token rejected by Ajax → force fresh login, persist, retry."""
+        import grpc
+
+        class _UnauthenticatedError(Exception):
+            def code(self) -> grpc.StatusCode:
+                return grpc.StatusCode.UNAUTHENTICATED
+
+        coordinator = _make_coordinator()
+        coordinator._client.session.is_authenticated = True
+
+        # First list_spaces raises UNAUTHENTICATED, second call returns []
+        unauth_error = _UnauthenticatedError("session rejected")
+
+        coordinator._spaces_api = MagicMock()
+        coordinator._spaces_api.list_spaces = AsyncMock(side_effect=[unauth_error, []])
+        coordinator._devices_api = MagicMock()
+        coordinator._devices_api.get_devices_snapshot = AsyncMock(return_value=[])
+        coordinator._client.session.clear_session = MagicMock()
+        coordinator._client.login = AsyncMock()
+        coordinator._client.session.session_token = "tok-fresh"
+        coordinator._client.session.user_hex_id = "hex-1"
+        callback = MagicMock()
+        coordinator._on_session_persist = callback
+
+        await coordinator._async_update_data()
+
+        coordinator._client.session.clear_session.assert_called_once()
+        coordinator._client.login.assert_awaited_once()
+        callback.assert_called_once_with("tok-fresh", "hex-1")
+        # list_spaces called twice (initial fail + retry)
+        assert coordinator._spaces_api.list_spaces.await_count == 2
+
+    @pytest.mark.asyncio
     async def test_async_shutdown_calls_client_close(self) -> None:
         coordinator = _make_coordinator(space_ids=[])
         coordinator._client.close = AsyncMock()

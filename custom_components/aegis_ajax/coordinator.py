@@ -26,6 +26,8 @@ from custom_components.aegis_ajax.const import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from homeassistant.core import HomeAssistant
 
     from custom_components.aegis_ajax.api.client import AjaxGrpcClient
@@ -56,6 +58,7 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         client: AjaxGrpcClient,
         space_ids: list[str],
         poll_interval: int = DEFAULT_POLL_INTERVAL,
+        on_session_persist: Callable[[str, str], None] | None = None,
     ) -> None:
         poll_interval = max(MIN_POLL_INTERVAL, min(MAX_POLL_INTERVAL, poll_interval))
         super().__init__(
@@ -63,6 +66,7 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
         self._poll_interval = poll_interval
         self._client = client
+        self._on_session_persist = on_session_persist
         self._space_ids = space_ids
         self._spaces_api = SpacesApi(client)
         self._security_api = SecurityApi(client)
@@ -110,12 +114,46 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def notification_listener(self) -> AjaxNotificationListener | None:
         return self._notification_listener
 
+    async def _login_and_persist(self) -> None:
+        """Login fresh and notify the on_session_persist callback.
+
+        Wrapping the bare client.login() call so every login site goes
+        through the persistence path. Without it the in-memory token is
+        the only copy and a restart re-logins (creating yet another
+        active session in Ajax) instead of reusing the latest one.
+        """
+        _LOGGER.debug("Logging in to Ajax (fresh session)")
+        await self._client.login()
+        token = self._client.session.session_token
+        user_hex_id = self._client.session.user_hex_id
+        if self._on_session_persist and token and user_hex_id:
+            try:
+                self._on_session_persist(token, user_hex_id)
+            except Exception:  # noqa: BLE001
+                _LOGGER.debug("Failed to persist refreshed session", exc_info=True)
+
+    @staticmethod
+    def _is_unauthenticated_error(exc: Exception) -> bool:
+        """True when a gRPC error indicates the saved token is no longer valid."""
+        # grpc.StatusCode.UNAUTHENTICATED == 16; gRPC raises grpc.aio.AioRpcError
+        code = getattr(exc, "code", None)
+        if callable(code):
+            try:
+                value = code()
+            except Exception:  # noqa: BLE001
+                return False
+            return (
+                getattr(value, "value", (None,))[0] == 16
+                or getattr(value, "name", "") == "UNAUTHENTICATED"
+            )
+        return False
+
     async def _async_update_data(self) -> dict[str, Any]:
         try:
             # Login if not authenticated
             if not self._client.session.is_authenticated:
                 try:
-                    await self._client.login()
+                    await self._login_and_persist()
                     # Restore normal interval after successful re-auth
                     configured = max(MIN_POLL_INTERVAL, min(MAX_POLL_INTERVAL, self._poll_interval))
                     self.update_interval = timedelta(seconds=configured)
@@ -129,8 +167,23 @@ class AjaxCobrandedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     )
                     raise UpdateFailed(f"Authentication failed: {err}") from err
 
-            # Refresh spaces
-            all_spaces = await self._spaces_api.list_spaces()
+            # Refresh spaces — if the saved token is stale Ajax replies with
+            # UNAUTHENTICATED; force a fresh login (and persist the new token)
+            # then retry once. Without this recovery the integration would
+            # raise UpdateFailed and the next restart would re-login again,
+            # piling up active sessions in the user's Ajax account.
+            try:
+                all_spaces = await self._spaces_api.list_spaces()
+            except Exception as exc:  # noqa: BLE001
+                if not self._is_unauthenticated_error(exc):
+                    raise
+                _LOGGER.warning(
+                    "Stored Ajax session was rejected (UNAUTHENTICATED). "
+                    "Forcing a fresh login and retrying."
+                )
+                self._client.session.clear_session()
+                await self._login_and_persist()
+                all_spaces = await self._spaces_api.list_spaces()
             now = asyncio.get_running_loop().time()
             new_spaces: dict[str, Space] = {}
             for s in all_spaces:
