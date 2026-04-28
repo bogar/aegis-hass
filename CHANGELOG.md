@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2-beta.3] - 2026-04-28
+
+### Fixed
+- Automations bound to `event.aegis_security_event` no longer trigger twice for every arm / disarm / night-mode transition. The Ajax FCM backend dispatches **two separate FCM messages** per security event (a user-facing `Notification` and a silent `DispatchEvent`) ~20–30 ms apart, both carrying the same `SpaceEventQualifier`. With the new in-memory shortcut from #68 they were both reaching the event-fire / refresh path. The notification listener now dedupes by Ajax `notification_id` over a 5 s window: the second push short-circuits before `_parse_and_fire_event` and `async_request_refresh()`. Photo-URL extraction and notification-id-future resolution stay above the dedupe gate, and pushes without an extractable `notification_id` skip dedupe (defensive). The alarm panel state path was already idempotent so panel state and HTS data are unchanged. (#80)
+
 ## [1.2.2-beta.2] - 2026-04-28
 
 ### Fixed
