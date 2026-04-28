@@ -496,3 +496,95 @@ class TestExtractEventCompiledProtos:
         event_type, data = result
         assert event_type == "alarm"
         assert data["raw_tag"] == "intrusion_alarm"
+
+
+class TestNotificationDedupe:
+    """Issue #80: Ajax dispatches two FCM messages per security transition with
+    identical notification_id; the second must not double-fire automations."""
+
+    def _make_listener(self) -> tuple[AjaxNotificationListener, MagicMock, MagicMock]:
+        hass = MagicMock()
+        hass.loop = MagicMock()
+        hass.loop.is_running.return_value = True
+        coordinator = MagicMock()
+        coordinator.async_request_refresh = AsyncMock()
+        coordinator._space_ids = []
+        listener = AjaxNotificationListener(hass=hass, coordinator=coordinator, **_FCM_KWARGS)
+        return listener, hass, coordinator
+
+    def test_duplicate_notification_id_skips_second_fire(self) -> None:
+        listener, hass, _ = self._make_listener()
+
+        # Two pushes with the same encoded data → same notification_id.
+        listener._on_notification({"ENCODED_DATA": _REAL_PUSH_ENCODED_DATA}, "pid-1")
+        listener._on_notification({"ENCODED_DATA": _REAL_PUSH_ENCODED_DATA}, "pid-2")
+
+        # First push triggered the refresh; second one short-circuited.
+        assert hass.loop.call_soon_threadsafe.call_count == 1
+
+    def test_distinct_notification_ids_both_fire(self) -> None:
+        listener, hass, _ = self._make_listener()
+
+        # First push uses the canonical real payload (notif_id = …D89E).
+        listener._on_notification({"ENCODED_DATA": _REAL_PUSH_ENCODED_DATA}, "pid-1")
+
+        # Second push has a different 64-char hex notification_id embedded in the
+        # raw bytes — extract_notification_id picks the first 64-hex match.
+        other_notif_id = "AAAA" + "B" * 60
+        encoded = base64.b64encode(other_notif_id.encode()).decode()
+        listener._on_notification({"ENCODED_DATA": encoded}, "pid-2")
+
+        assert hass.loop.call_soon_threadsafe.call_count == 2
+
+    def test_duplicate_outside_window_fires_again(self) -> None:
+        from custom_components.aegis_ajax.notification import (  # noqa: PLC0415
+            NOTIFICATION_DEDUPE_WINDOW_SECONDS,
+        )
+
+        listener, hass, _ = self._make_listener()
+
+        with patch("custom_components.aegis_ajax.notification.time.monotonic") as monotonic:
+            monotonic.return_value = 1000.0
+            listener._on_notification({"ENCODED_DATA": _REAL_PUSH_ENCODED_DATA}, "pid-1")
+
+            # Second push beyond the dedupe window — should fire again.
+            monotonic.return_value = 1000.0 + NOTIFICATION_DEDUPE_WINDOW_SECONDS + 0.1
+            listener._on_notification({"ENCODED_DATA": _REAL_PUSH_ENCODED_DATA}, "pid-2")
+
+        assert hass.loop.call_soon_threadsafe.call_count == 2
+
+    def test_push_without_notification_id_does_not_dedupe(self) -> None:
+        # Defensive: if extract_notification_id returns None (parser miss), we
+        # never want to silence the second push by accident.
+        listener, hass, _ = self._make_listener()
+
+        # Encoded data without a 64-char hex string → notif_id is None.
+        encoded = base64.b64encode(b"no hex id present here, just text").decode()
+
+        listener._on_notification({"ENCODED_DATA": encoded}, "pid-1")
+        listener._on_notification({"ENCODED_DATA": encoded}, "pid-2")
+
+        assert hass.loop.call_soon_threadsafe.call_count == 2
+
+    def test_dedupe_dict_pruned_to_recent_entries(self) -> None:
+        from custom_components.aegis_ajax.notification import (  # noqa: PLC0415
+            NOTIFICATION_DEDUPE_WINDOW_SECONDS,
+        )
+
+        listener, _, _ = self._make_listener()
+
+        with patch("custom_components.aegis_ajax.notification.time.monotonic") as monotonic:
+            monotonic.return_value = 1000.0
+            listener._on_notification({"ENCODED_DATA": _REAL_PUSH_ENCODED_DATA}, "pid-1")
+            assert _EXPECTED_NOTIFICATION_ID in listener._recent_notification_ids
+
+            # A later, distinct push prunes the expired entry.
+            monotonic.return_value = 1000.0 + NOTIFICATION_DEDUPE_WINDOW_SECONDS + 1.0
+            other = "FFFF" + "E" * 60
+            listener._on_notification(
+                {"ENCODED_DATA": base64.b64encode(other.encode()).decode()},
+                "pid-2",
+            )
+
+        assert _EXPECTED_NOTIFICATION_ID not in listener._recent_notification_ids
+        assert other in listener._recent_notification_ids
