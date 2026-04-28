@@ -15,6 +15,7 @@ from custom_components.aegis_ajax.const import (
     DOMAIN,
     HUB_EVENT_TAG_MAP,
     RAW_TAG_TO_SECURITY_STATE,
+    SPACE_EVENT_TAG_MAP,
 )
 
 if TYPE_CHECKING:
@@ -335,21 +336,54 @@ class AjaxNotificationListener:
             return self._extract_event_raw(raw)
 
     def _extract_event_with_compiled_protos(self, raw: bytes) -> tuple[str, dict[str, Any]] | None:
-        """Parse event by finding HubEventQualifier embedded in raw protobuf."""
+        """Parse event by finding a Hub or Space event qualifier in raw protobuf.
+
+        Arm/disarm pushes embed a `SpaceEventQualifier` (`SpaceNotificationContent.
+        qualifier`) — try those first (#68). The same payload often also carries
+        unrelated `HubEventQualifier` candidates describing zone-level
+        sub-incidents (`ext_contact_opened`, `roller_shutter_alarm`); they are
+        the legitimate primary tag for hub-level pushes (alarm, tamper, …) so
+        they remain the fallback.
+        """
         from systems.ajax.api.ecosystem.v2.communicationsvc.mobile.commonmodels.event.hub import (  # noqa: PLC0415, E501
-            qualifier_pb2,
+            qualifier_pb2 as hub_qualifier_pb2,
+        )
+        from systems.ajax.api.ecosystem.v2.communicationsvc.mobile.commonmodels.event.space import (  # noqa: PLC0415, E501
+            qualifier_pb2 as space_qualifier_pb2,
         )
 
-        for candidate in self._find_embedded_messages(raw):
+        candidates = self._find_embedded_messages(raw)
+
+        # Pass 1 — SpaceEventQualifier (arm/disarm/night/panic at space level).
+        for candidate in candidates:
             try:
-                qualifier = qualifier_pb2.HubEventQualifier()
+                space_q = space_qualifier_pb2.SpaceEventQualifier()
+                space_q.ParseFromString(candidate)
+            except Exception:
+                continue
+            if not space_q.HasField("tag"):
+                continue
+            tag_field = space_q.tag.WhichOneof("event_tag_case")
+            if tag_field and tag_field in SPACE_EVENT_TAG_MAP:
+                event_type = SPACE_EVENT_TAG_MAP[tag_field]
+                data: dict[str, Any] = {"raw_tag": tag_field}
+                if space_q.HasField("transition"):
+                    trans_field = space_q.transition.WhichOneof("transition")
+                    if trans_field:
+                        data["transition"] = trans_field
+                return event_type, data
+
+        # Pass 2 — HubEventQualifier (zone-level events: alarm, tamper, …).
+        for candidate in candidates:
+            try:
+                qualifier = hub_qualifier_pb2.HubEventQualifier()
                 qualifier.ParseFromString(candidate)
                 if qualifier.HasField("tag"):
                     tag = qualifier.tag
                     tag_field = tag.WhichOneof("event_tag_case")
                     if tag_field and tag_field in HUB_EVENT_TAG_MAP:
                         event_type = HUB_EVENT_TAG_MAP[tag_field]
-                        data: dict[str, Any] = {"raw_tag": tag_field}
+                        data = {"raw_tag": tag_field}
                         if qualifier.HasField("transition"):
                             trans_field = qualifier.transition.WhichOneof("transition")
                             if trans_field:
