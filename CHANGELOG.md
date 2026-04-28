@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2-beta.1] - 2026-04-28
+
+### Fixed
+- The FCM-driven instant `security_state` shortcut now fires for arm / disarm / night-mode pushes in co-brand setups where it had been silently falling through to the legacy poll-refresh path. The push payload encodes the primary transition in a `SpaceEventQualifier` (inside `SpaceNotificationContent.qualifier`), but the parser only inspected `HubEventQualifier` candidates, which in those payloads carry secondary zone-incident tags such as `ext_contact_opened` / `roller_shutter_alarm`. The parser now tries `SpaceEventQualifier` first and maps the `space_armed` / `space_disarmed` / `space_night_mode_*` family to a new `SPACE_EVENT_TAG_MAP`, falling back to `HubEventQualifier` for genuine hub-level events (alarm, tamper, …). The `event.aegis_security_event` entity also benefits because it shares the same parser. (#68)
+- The HTS authentication handshake is now bounded by an overall 20s timeout. Previously `_authenticate()` only relied on the per-chunk `READ_TIMEOUT`, so a server that kept the TCP connection alive while feeding bytes slowly could keep the handshake await alive forever — blocking `_async_update_data()` for hours and freezing the alarm panel state. On timeout the connection is closed and `HtsConnectionError` is raised, so the coordinator surfaces `UpdateFailed` and reschedules the next poll on the normal cadence. (#74)
+
 ## [1.2.1] - 2026-04-28
 
 Stable release rolling up the `1.2.1-beta.1` … `1.2.1-beta.10` line. Highlights:
