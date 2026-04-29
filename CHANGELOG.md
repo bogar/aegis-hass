@@ -5,15 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.3-beta.2] - 2026-04-29
+## [1.2.3] - 2026-04-29
+
+Stable release rolling up the `1.2.3-beta.1` and `1.2.3-beta.2` line. Closes #78 and ships another community contribution from @bogar.
 
 ### Fixed
-- `CRA company` no longer breaks Home Assistant's `/api/states` responses when enabled. Ajax exposes monitoring-company names through protobuf `StringValue` wrappers in the full `Space` snapshot; the integration now unwraps those values to plain strings before storing them in entity state / attributes, so the diagnostic sensor materializes correctly and the global states endpoint remains serializable. (#78, thanks @bogar)
-
-## [1.2.3-beta.1] - 2026-04-29
-
-### Fixed
-- The `CRA connection` binary sensor now reflects actual approved monitoring-company assignments from the full `Space` snapshot instead of the hub-status `monitoring.cms_active` flag, which could stay `off` on installations that do have a CRA attached. The integration preserves the legacy entity id / unique id for backwards compatibility, adds a disabled-by-default diagnostic `CRA company` sensor with the approved company name(s), and keeps both entities `unavailable` until the first monitoring snapshot has been loaded so they do not show a false initial `off`. (#78, thanks @bogar)
+- The `CRA connection` binary sensor now reflects actual approved monitoring-company assignments from the full `Space` snapshot instead of the hub-status `monitoring.cms_active` flag, which could stay `off` on installations that do have a CRA attached. The integration preserves the legacy entity id / unique id for backwards compatibility, adds a disabled-by-default diagnostic `CRA company` sensor with the approved company name(s), and keeps both entities `unavailable` until the first monitoring snapshot has been loaded so they do not show a false initial `off`. The diagnostic sensor unwraps Ajax's `google.protobuf.StringValue` company-name wrapper to a plain string before storing it in entity state / attributes, so enabling the sensor doesn't break Home Assistant's `/api/states` endpoint. (#78, thanks @bogar)
 
 ## [1.2.2] - 2026-04-28
 
