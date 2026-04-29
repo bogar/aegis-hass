@@ -62,7 +62,7 @@ def build_connect_request(
     device_id: str,
     app_label: str,
     client_os: str = "Android",
-    client_version: str = "4.1",
+    client_version: str = "3.46",
     connection_type: int = 5,
     device_model: str = "SM-S921B",
 ) -> bytes:
@@ -81,7 +81,7 @@ def build_connect_request(
         device_id:        Device identifier string.
         app_label:        Application label string.
         client_os:        OS name string (default "Android").
-        client_version:   App version string (default "4.1").
+        client_version:   App version string (default "3.46").
         connection_type:  Connection type integer (default 5).
         device_model:     Device model string (default "SM-S921B").
 

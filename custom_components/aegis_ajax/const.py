@@ -59,7 +59,7 @@ GRPC_HOST = "mobile-gw.prod.ajax.systems"
 GRPC_PORT = 443
 
 CLIENT_OS = "Android"
-CLIENT_VERSION = "4.1"
+CLIENT_VERSION = "3.46"
 APPLICATION_LABEL = "Ajax"  # default (main Ajax app labelName)
 KNOWN_APP_LABELS = [
     "Ajax",

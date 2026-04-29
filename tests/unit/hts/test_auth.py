@@ -72,9 +72,9 @@ class TestBuildConnectRequest:
             login_token=b"\x00",
             device_id="d",
             app_label="app",
-            client_version="4.1",
+            client_version="3.46",
         )
-        assert b"4.1" in payload
+        assert b"3.46" in payload
 
     def test_contains_device_model(self) -> None:
         payload = build_connect_request(
