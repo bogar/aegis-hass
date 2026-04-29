@@ -59,7 +59,7 @@ GRPC_HOST = "mobile-gw.prod.ajax.systems"
 GRPC_PORT = 443
 
 CLIENT_OS = "Android"
-CLIENT_VERSION = "3.30"
+CLIENT_VERSION = "4.1"
 APPLICATION_LABEL = "Ajax"  # default (main Ajax app labelName)
 KNOWN_APP_LABELS = [
     "Ajax",
@@ -90,7 +90,7 @@ KNOWN_APP_LABELS = [
     "Protecta",
     "ajax_pro",
 ]
-CLIENT_DEVICE_MODEL = "SM-A536B"  # Generic Android model (Samsung Galaxy A53)
+CLIENT_DEVICE_MODEL = "SM-S921B"  # Generic Android model (Samsung Galaxy S24)
 CLIENT_DEVICE_TYPE = "MOBILE"
 CLIENT_APP_TYPE = "USER"
 

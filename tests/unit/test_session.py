@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 
 from custom_components.aegis_ajax.api.session import AjaxSession
+from custom_components.aegis_ajax.const import CLIENT_DEVICE_MODEL, CLIENT_VERSION
 
 
 class TestPasswordHashing:
@@ -69,11 +70,11 @@ class TestSessionMetadata:
         meta = session.get_device_info_metadata()
         meta_dict = dict(meta)
         assert meta_dict["client-os"] == "Android"
-        assert meta_dict["client-version-major"] == "3.30"
+        assert meta_dict["client-version-major"] == CLIENT_VERSION
         assert meta_dict["application-label"] == "Ajax Security System"
         assert meta_dict["client-device-type"] == "MOBILE"
         assert meta_dict["client-device-id"] == "device-uuid-1"
-        assert meta_dict["client-device-model"] == "SM-A536B"
+        assert meta_dict["client-device-model"] == CLIENT_DEVICE_MODEL
 
     def test_device_info_custom_app_label(self) -> None:
         session = AjaxSession(app_label="Protegim")
@@ -87,7 +88,7 @@ class TestSessionMetadata:
         session._app_label = "Ajax Security System"
         meta = dict(session.get_device_info_metadata())
         assert "client-device-model" in meta
-        assert meta["client-device-model"] == "SM-A536B"
+        assert meta["client-device-model"] == CLIENT_DEVICE_MODEL
 
     def test_session_metadata_has_user_login(self) -> None:
         session = AjaxSession.__new__(AjaxSession)
